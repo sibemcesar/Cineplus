@@ -51,16 +51,43 @@
       }
     }
 
-    .header {
-      padding: 20px;
-      background: var(--bg-secondary);
-      border-bottom: 1px solid var(--border-color);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      backdrop-filter: blur(10px);
-      animation: slideDown 0.5s ease;
+     .header {
+      background:#1a1f2b;
+      color:#e6e8ee;
+      display:flex;
+      align-items:center;
+      justify-content:flex-start; /* botão + nome alinhados à esquerda */
+      padding:12px 16px;
+      gap:12px;
     }
+    .app-name { font-size:12px; font-weight:bold; }
+
+    .menu-btn {
+      background:none; border:none; cursor:pointer; color:#fff;
+    }
+    .menu-btn svg { width:24px; height:24px; fill:#fff; }
+
+    /* Sidebar */
+    .sidebar {
+      position:fixed; top:0; left:-100%; /* totalmente fora da tela */
+      width:260px; height:100%;
+      background:#1a1f2b; box-shadow:2px 0 8px rgba(0,0,0,0.5);
+      transition:left 0.3s ease;
+      padding:20px;
+      display:flex; flex-direction:column; gap:12px;
+      z-index:100;
+    }
+    .sidebar.open { left:0; }
+
+    .sidebar h2 { margin-top:0; font-size:16px; color:#fff; }
+    .btn {
+      display:flex; align-items:center; gap:8px;
+      background:transparent; border:none; border-radius:8px;
+      padding:10px; color:#fff; font-weight:600; cursor:pointer;
+    }
+    .btn svg { width:18px; height:18px; fill:#fff; }
+    .btn:active { transform:scale(0.96); }
+
 
     @keyframes slideDown {
       from {
@@ -741,18 +768,176 @@
         --bg-card: #232323;
       }
     }
-  </style>
+  
+   .logo-container {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    background:#0f1115;
+  }
+
+  .logo-img {
+    max-width:220px;
+    height:auto;
+    filter:drop-shadow(0 0 6px rgba(255,255,255,0.2));
+    transition:transform 0.3s ease;
+  }
+
+  .logo-img:hover {
+    transform:scale(1.05);
+  }
+  
+  .overlay2 {
+    position:fixed; inset:0; background:rgba(0,0,0,0.7);
+    display:none; align-items:center; justify-content:center;
+    z-index:300;
+  }
+  .modal2 {
+    background:#1a1f2b; border-radius:10px; padding:20px;
+    max-width:500px; width:90%; color:#e6e8ee;
+  }
+  .modal2 h2 { margin-top:0; }
+  .modal2 p { font-size:14px; margin-bottom:16px; }
+  .links { display:flex; flex-direction:column; gap:10px; }
+  .link-btn {
+    display:flex; align-items:center; gap:8px;
+    background:#fff; border:none; border-radius:8px;
+    padding:10px; color:black; font-weight:600; cursor:pointer;
+    text-decoration:none; justify-content:center;
+  }
+  .link-btn svg { width:20px; height:20px; fill:#fff; }
+  .close {
+    margin-top:16px; padding:8px 12px;
+    background:#333; border:none; border-radius:6px;
+    color:#fff; cursor:pointer;
+  }
+.overlay3 {
+    position:fixed; inset:0;
+    background:#0f1115;
+    display:none; 
+    z-index:400;
+    overflow-y:auto; /* permite scroll interno */
+  }
+  .modal3 {
+    color:#e6e8ee;
+    max-width:800px; width:90%;
+    margin:40px auto; /* centraliza com margem */
+    padding:30px;
+    text-align:center;
+    background:#1a1f2b;
+    border-radius:10px;
+  }
+  .modal3 h1 {
+    margin-top:0;
+    font-size:24px;
+    color:#4f7cff;
+  }
+  .modal3 p {
+    font-size:15px;
+    line-height:1.6;
+    margin-bottom:18px;
+    text-align:justify;
+  }
+  .close3 {
+    margin-top:20px;
+    padding:10px 16px;
+    background:#333; border:none; border-radius:6px;
+    color:#fff; cursor:pointer;
+    font-weight:600;
+  }
+  .close3:hover { background:#555; }  </style>
 </head>
 <body>
   <div class="header">
-    <div class="logo">Cine Plus AO</div>
+   <button class="menu-btn" onclick="toggleSidebar()">
+      <!-- Ícone de menu (hamburger) -->
+      <svg viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+    </button>
+    <div class="app-name">Cine Plus AO</div>
+  </header>
+
+  <!-- Sidebar -->
+  <div id="sidebar" class="sidebar">
+    <h2>Cine Plus AO</h2>
+    <!-- Logo Cine Plus AO -->
+<div class="logo-container">
+  <img src="image.jpeg" alt="Cine Plus AO" class="logo-img">
+</div>
+
+    <button class="btn" onclick="openSettings()">
+      <svg viewBox="0 0 24 24"><path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7zm7.94-2.5c.04-.33.06-.66.06-1s-.02-.67-.06-1l2.03-1.58a.5.5 0 0 0 .12-.65l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7.07 7.07 0 0 0-1.73-1l-.36-2.54A.5.5 0 0 0 14.5 2h-5a.5.5 0 0 0-.5.42l-.36 2.54c-.63.25-1.21.58-1.73 1l-2.39-.96a.5.5 0 0 0-.61.22L2.5 8.42a.5.5 0 0 0 .12.65l2.03 1.58c-.04.33-.06.66-.06 1s.02.67.06 1l-2.03 1.58a.5.5 0 0 0-.12.65l1.92 3.32c.14.24.42.34.68.22l2.39-.96c.52.42 1.1.75 1.73 1l.36 2.54c.04.27.26.46.5.46h5c.24 0 .46-.19.5-.46l.36-2.54c.63-.25 1.21-.58 1.73-1l2.39.96c.26.12.54.02.68-.22l1.92-3.32a.5.5 0 0 0-.12-.65l-2.03-1.58z"/></svg>
+      Definições do GA Navegador
+    </button>
+    <button class="btn" onclick="openOverlay2()">
+<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path d="M5 20h14v-2H5v2zm7-18v12l4-4h-3V2h-2v8H9l3 4z"/>
+</svg>  Baixar Navegadores
+    </button>
+    <!-- Overlay 2 -->
+<div id="overlay2" class="overlay2">
+  <div class="modal2">
+    <h2>Baixar Navegadores</h2>
+    <p>Escolha um dos navegadores abaixo para instalar e abrir os conteúdos do Cine Plus AO:</p>
+    <div class="links">
+      <a class="link-btn" href="https://play.google.com/store/apps/details?id=com.dv.adm" target="_blank">
+        <svg viewBox="0 0 24 24"><path d="M3 20.5v-17l14 8.5-14 8.5zM17 12l4-2.5v5L17 12z"/></svg>
+        ADM Manager
+      </a>
+     
+      <a class="link-btn" href="https://www.mediafire.com/file/wboukp5zpx7bckz/G.A+Navegador_8.0.1807.91281.apk/file" target="_blank">
+        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 3a7 7 0 0 1 6.93 6H12V5zM5.07 9A7 7 0 0 1 12 5v7H5.07A7 7 0 0 1 5.07 9zM12 19a7 7 0 0 1-6.93-6H12v6z"/></svg>
+        GA Navegador
+      </a>
+    </div>
+    <button class="close" onclick="closeOverlay2()">Voltar</button>
+  </div>
+</div>
+       <button class="btn" onclick="openOverlay3()">
+     <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10
+           10-4.48 10-10S17.52 2 12 2zm0 3a1.5 1.5 0 1 1 0 3
+           1.5 1.5 0 0 1 0-3zm1 14h-2v-6h2v6z"/>
+</svg>    Sobre Nós
+    </button>
+    <!-- Overlay 3 -->
+<div id="overlay3" class="overlay3">
+  <div class="modal3">
+    <h1>Sobre o Cine Plus AO</h1>
+     <strong>Cine Plus AO</strong> é um aplicativo desenvolvido para oferecer a melhor experiência
+      de filmes e séries em Angola. Nosso objetivo é criar uma plataforma simples, rápida e segura,
+      onde você pode explorar conteúdos, assistir trailers e acessar links de forma prática para baixar.
+    </p>
+    <p>
+      A nossa plataforma não hospeda nem armazena qualquer conteúdo próprio. Todo o material exibido é proveniente de terceiros.
+    </p>
+    <p>
+      Nosso objetivo é apenas <strong>informar sobre os lançamentos mais recentes</strong>, disponibilizando links para que você possa <strong>baixar</strong> os conteúdos.
+    </p>
+    <p>
+      Atualmente, não é possível assistir diretamente pelo aplicativo — a função disponível é apenas o <strong>download</strong>.
+    </p>
+    <p>
+      Os conteúdos apresentados <strong>não são permanentes</strong>: possuem curto prazo de disponibilidade. Isso significa que, a qualquer momento, títulos podem ser removidos e substituídos por novos lançamentos.
+    </p>
+  <p>
+      Desenvolvido por <strong>SIBEM</strong> </p>
+    <p>
+      Versão: <strong>1.0.0</strong><br>
+      Última atualização: Novembro 2025
+    </p>
+    <button class="close3" onclick="closeOverlay3()">Voltar</button>
+  </div>
+</div>
+  </div>
+
     <div class="search-container">
       <div class="search-wrapper">
         <input
           type="text"
           id="searchInput"
           class="search-input"
-          placeholder="Pesquisar filmes e séries..."
+          placeholder="Pesq filmes e séries..."
         >
         <span class="search-icon"><svg xmlns="http://www.w3.org/2000/svg"
      viewBox="0 0 122.88 122.88"
@@ -809,7 +994,7 @@
           <button id="btnADM" class="btn-main btn-adm">Baixar no ADM</button>
         </div>
 
-        <button class="btn-close" onclick="closeOverlay()">Fechar</button>
+        <button class="btn-close" onclick="closeOverlay()">Voltar</button>
       </div>
     </div>
   </div>
@@ -828,7 +1013,7 @@
         </div>
       </div>
       <div style="padding: 16px 24px;">
-        <button class="btn-close" onclick="closeHistory()">Fechar</button>
+        <button class="btn-close" onclick="closeHistory()">Voltar</button>
       </div>
     </div>
   </div>
@@ -1200,6 +1385,59 @@
       }
     });
   </script>
+<script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+    function openSettings() {
+      const pkg = 'com.grupo.a.navegador';
+      if (typeof Android !== 'undefined' && Android.openSettings) {
+        Android.openSettings(pkg);
+      } else {
+        alert('Interface Android não disponível.');
+      }
+    }    
+    </script>
+  <script>
+  const sidebar = document.getElementById('sidebar');
+  let startX = 0;
+  let endX = 0;
+
+  // Detecta início do toque
+  sidebar.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+  });
+
+  // Detecta movimento
+  sidebar.addEventListener('touchmove', (e) => {
+    endX = e.touches[0].clientX;
+  });
+
+  // Detecta fim do gesto
+  sidebar.addEventListener('touchend', () => {
+    const diffX = endX - startX;
+    // Se arrastou mais de 50px para a esquerda → fecha
+    if (diffX < -50) {
+      sidebar.classList.remove('open');
+    }
+  });
+</script>
+<script>
+function openOverlay2() {
+  document.getElementById('overlay2').style.display = 'flex';
+}
+function closeOverlay2() {
+  document.getElementById('overlay2').style.display = 'none';
+}
+</script>
+<script>
+function openOverlay3() {
+  document.getElementById('overlay3').style.display = 'flex';
+}
+function closeOverlay3() {
+  document.getElementById('overlay3').style.display = 'none';
+}
+</script>
 </body>
 </html>
 
