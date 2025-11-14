@@ -880,15 +880,15 @@
     <h2>Baixar Navegadores</h2>
     <p>Escolha um dos navegadores abaixo para instalar e abrir os conteúdos do Cine Plus AO:</p>
     <div class="links">
-      <a class="link-btn" href="https://play.google.com/store/apps/details?id=com.dv.adm" target="_blank">
-        <svg viewBox="0 0 24 24"><path d="M3 20.5v-17l14 8.5-14 8.5zM17 12l4-2.5v5L17 12z"/></svg>
-        ADM Manager
-      </a>
-     
-      <a class="link-btn" href="https://www.mediafire.com/file/wboukp5zpx7bckz/G.A+Navegador_8.0.1807.91281.apk/file" target="_blank">
-        <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 3a7 7 0 0 1 6.93 6H12V5zM5.07 9A7 7 0 0 1 12 5v7H5.07A7 7 0 0 1 5.07 9zM12 19a7 7 0 0 1-6.93-6H12v6z"/></svg>
-        GA Navegador
-      </a>
+<!-- Botão para ADM -->
+<button  class="link-btn" onclick="AppBridge.openADM()">
+  Abrir ADM Downloader
+</button>
+
+<!-- Botão para GA Navegador -->
+<button  class="link-btn" onclick="AppBridge.openGA()">
+  Abrir GA Navegador
+</button>
     </div>
     <button class="close" onclick="closeOverlay2()">Voltar</button>
   </div>
