@@ -58,7 +58,7 @@
       color:#e6e8ee;
       display:flex;
       align-items:center;
-      justify-content:flex-start; /* botão + nome alinhados à esquerda */
+      justify-content:flex-start;
       padding:12px 16px;
       gap:12px;
     }
@@ -71,7 +71,7 @@
 
     /* Sidebar */
     .sidebar {
-      position:fixed; top:0; left:-100%; /* totalmente fora da tela */
+      position:fixed; top:0; left:-100%;
       width:260px; height:100%;
       background:#1a1f2b; box-shadow:2px 0 8px rgba(0,0,0,0.5);
       transition:left 0.3s ease;
@@ -522,6 +522,7 @@
     .episode-actions {
       display: flex;
       gap: 8px;
+      flex-wrap: wrap;
     }
 
     .btn-episode {
@@ -535,6 +536,16 @@
       transition: all 0.2s ease;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+    }
+
+    .btn-episode-watch {
+      background: #4f7cff;
+      color: #fff;
+    }
+
+    .btn-episode-watch:hover {
+      background: #3d5fd1;
+      transform: translateY(-1px);
     }
 
     .btn-episode-ga {
@@ -562,10 +573,12 @@
       display: flex;
       gap: 12px;
       margin-top: 24px;
+      flex-wrap: wrap;
     }
 
     .btn-main {
       flex: 1;
+      min-width: 150px;
       padding: 14px;
       border: none;
       border-radius: 8px;
@@ -576,6 +589,17 @@
       transition: all 0.2s ease;
       text-transform: uppercase;
       letter-spacing: 1px;
+    }
+
+    .btn-watch {
+      background: #4f7cff;
+      color: #fff;
+    }
+
+    .btn-watch:hover {
+      background: #3d5fd1;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
     }
 
     .btn-ga {
@@ -770,7 +794,7 @@
         --bg-card: #232323;
       }
     }
-  
+
    .logo-container {
     display:flex;
     justify-content:center;
@@ -789,7 +813,7 @@
   .logo-img:hover {
     transform:scale(1.05);
   }
-  
+
   .overlay2 {
     position:fixed; inset:0; background:rgba(0,0,0,0.7);
     display:none; align-items:center; justify-content:center;
@@ -814,17 +838,18 @@
     background:#333; border:none; border-radius:6px;
     color:#fff; cursor:pointer;
   }
-.overlay3 {
+
+  .overlay3 {
     position:fixed; inset:0;
     background:#0f1115;
-    display:none; 
+    display:none;
     z-index:400;
-    overflow-y:auto; /* permite scroll interno */
+    overflow-y:auto;
   }
   .modal3 {
     color:#e6e8ee;
     max-width:800px; width:90%;
-    margin:40px auto; /* centraliza com margem */
+    margin:40px auto;
     padding:30px;
     text-align:center;
     background:#1a1f2b;
@@ -848,117 +873,335 @@
     color:#fff; cursor:pointer;
     font-weight:600;
   }
-  .close3:hover { background:#555; }  </style>
+  .close3:hover { background:#555; }
+
+  /* Player Overlay Styles */
+  .player-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.98);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 5000;
+    padding: 20px;
+  }
+
+  .player-overlay.active {
+    display: flex;
+  }
+
+  .player-container {
+    width: 100%;
+    max-width: 1200px;
+    background: #0b0d11;
+    border: 1px solid #161a22;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  }
+
+  /* Player Styles from App 1 */
+  .video-wrap {
+    position: relative;
+    background: #000;
+    aspect-ratio: 16 / 9;
+  }
+
+  .player-container video {
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: #000;
+  }
+
+  .player-overlay-content {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+  }
+
+  .status {
+    background: rgba(0,0,0,0.6);
+    color: #e6e8ee;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: 0.2s ease;
+  }
+
+  .status.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .controls {
+    display: grid;
+    gap: 12px;
+    padding: 12px;
+    background: #1a1f29;
+    border-top: 1px solid #12151d;
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .player-btn {
+    appearance: none;
+    border: none;
+    background: #2a2f3a;
+    color: #e6e8ee;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+
+  .player-btn:hover {
+    background: #3a4150;
+  }
+
+  .player-btn.primary {
+    background: #4caf50;
+    color: #041307;
+  }
+
+  .time {
+    font-variant-numeric: tabular-nums;
+    color: #aab0bd;
+    font-size: 13px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: #12151d;
+  }
+
+  .progress-wrap {
+    position: relative;
+    width: 100%;
+    display: grid;
+    align-items: center;
+  }
+
+  .progress {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    background: #2a2f3a;
+    border-radius: 999px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .progress::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #4caf50;
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.25);
+  }
+
+  .progress::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #4caf50;
+    border-radius: 50%;
+    border: none;
+  }
+
+  .buffered-bar {
+    position: absolute;
+    left: 0;
+    height: 8px;
+    border-radius: 999px;
+    background: #7f8ea3;
+    pointer-events: none;
+  }
+
+  .slider {
+    width: 120px;
+    height: 6px;
+    background: #2a2f3a;
+    border-radius: 999px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    background: #e6e8ee;
+    border-radius: 50%;
+  }
+
+  .slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    background: #e6e8ee;
+    border-radius: 50%;
+    border: none;
+  }
+
+  .player-select {
+    background: #2a2f3a;
+    color: #e6e8ee;
+    border: 1px solid #1f2531;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+
+  .player-close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid #333;
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 10;
+    transition: all 0.2s ease;
+  }
+
+  .player-close-btn:hover {
+    background: rgba(0, 0, 0, 0.9);
+    border-color: #555;
+  }
+  </style>
 </head>
 <body>
   <div class="header">
    <button class="menu-btn" onclick="toggleSidebar()">
-      <!-- Ícone de menu (hamburger) -->
       <svg viewBox="0 0 24 24"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
     </button>
     <div class="app-name">Cine Plus AO</div>
-  </header>
+  </div>
 
   <!-- Sidebar -->
   <div id="sidebar" class="sidebar">
     <h2>Cine Plus AO</h2>
-    <!-- Logo Cine Plus AO -->
-<div class="logo-container">
-  <img src="image.jpeg" alt="Cine Plus AO" class="logo-img">
-</div>
+    <div class="logo-container">
+      <img src="image.jpeg" alt="Cine Plus AO" class="logo-img">
+    </div>
 
     <button class="btn" onclick="openSettings()">
-      <svg viewBox="0 0 24 24"><path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7zm7.94-2.5c.04-.33.06-.66.06-1s-.02-.67-.06-1l2.03-1.58a.5.5 0 0 0 .12-.65l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7.07 7.07 0 0 0-1.73-1l-.36-2.54A.5.5 0 0 0 14.5 2h-5a.5.5 0 0 0-.5.42l-.36 2.54c-.63.25-1.21.58-1.73 1l-2.39-.96a.5.5 0 0 0-.61.22L2.5 8.42a.5.5 0 0 0 .12.65l2.03 1.58c-.04.33-.06.66-.06 1s.02.67.06 1l-2.03 1.58a.5.5 0 0 0-.12.65l1.92 3.32c.14.24.42.34.68.22l2.39-.96c.52.42 1.1.75 1.73 1l.36 2.54c.04.27.26.46.5.46h5c.24 0 .46-.19.5-.46l.36-2.54c.63-.25 1.21-.58 1.73-1l2.39.96c.26.12.54.02.68-.22l1.92-3.32a.5.5 0 0 0-.12-.65l-2.03-1.58z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7zm7.94-2.5c.04-.33.06-.66.06-1s-.02-.67-.06-1l2.03-1.58a.5.5 0 0 0 .12-.65l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7.07 7.07 0 0 0-1.73-1l-.36-2.54A.5.5 0 0 0 14.5 2h-5a.5.5 0 0 0-.5.42l-.36 2.54c-.63.25-1.21.58-1.73 1l-2.39-.96a.5.5 0 0 0-.61.22L2.5 8.42a.5.5 0 0 0 .12.65l2.03 1.58c-.04.33-.06.66-.06 1s.02.67.06 1l-2.03 1.58a.5.5 0 0 0-.12.65l1.92 3.32c.14.24.42.34.68.22l2.39-.96c.52.42 1.10.75 1.73 1l.36 2.54c.04.27.26.46.5.46h5c.24 0 .46-.19.5-.46l.36-2.54c.63-.25 1.21-.58 1.73-1l2.39.96c.26.12.54.02.68-.22l1.92-3.32a.5.5 0 0 0-.12-.65l-2.03-1.58z"/></svg>
       Definições do GA Navegador
     </button>
     <button class="btn" onclick="openOverlay2()">
-<svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path d="M5 20h14v-2H5v2zm7-18v12l4-4h-3V2h-2v8H9l3 4z"/>
-</svg>  Baixar Navegadores
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5 20h14v-2H5v2zm7-18v12l4-4h-3V2h-2v8H9l3 4z"/>
+      </svg>
+      Baixar Navegadores
     </button>
+
     <!-- Overlay 2 -->
-<div id="overlay2" class="overlay2">
-  <div class="modal2">
-    <h2>Baixar Navegadores</h2>
-    <p>Escolha um dos navegadores abaixo para instalar e abrir os conteúdos do Cine Plus AO:</p>
-    <div class="links">
-<!-- Botão para ADM -->
-<button  class="link-btn" onclick="AppBridge.openADM()">
-  Abrir ADM Downloader
-</button>
-
-<!-- Botão para GA Navegador -->
-<button  class="link-btn" onclick="AppBridge.openGA()">
-  Abrir GA Navegador
-</button>
-    </div>
-    <button class="close" onclick="closeOverlay2()">Voltar</button>
-  </div>
-</div>
-       <button class="btn" onclick="openOverlay3()">
-     <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10
-           10-4.48 10-10S17.52 2 12 2zm0 3a1.5 1.5 0 1 1 0 3
-           1.5 1.5 0 0 1 0-3zm1 14h-2v-6h2v6z"/>
-</svg>    Sobre Nós
-    </button>
-    <!-- Overlay 3 -->
-<div id="overlay3" class="overlay3">
-  <div class="modal3">
-    <h1>Sobre o Cine Plus AO</h1>
-     <strong>Cine Plus AO</strong> é um aplicativo desenvolvido para oferecer a melhor experiência
-      de filmes e séries em Angola. Nosso objetivo é criar uma plataforma simples, rápida e segura,
-      onde você pode explorar conteúdos, assistir trailers e acessar links de forma prática para baixar.
-    </p>
-    <p>
-      A nossa plataforma não hospeda nem armazena qualquer conteúdo próprio. Todo o material exibido é proveniente de terceiros.
-    </p>
-    <p>
-      Nosso objetivo é apenas <strong>informar sobre os lançamentos mais recentes</strong>, disponibilizando links para que você possa <strong>baixar</strong> os conteúdos.
-    </p>
-    <p>
-      Atualmente, não é possível assistir diretamente pelo aplicativo — a função disponível é apenas o <strong>download</strong>.
-    </p>
-    <p>
-      Os conteúdos apresentados <strong>não são permanentes</strong>: possuem curto prazo de disponibilidade. Isso significa que, a qualquer momento, títulos podem ser removidos e substituídos por novos lançamentos.
-    </p>
-  <p>
-      Desenvolvido por <strong>SIBEM</strong> </p>
-    <p>
-      Versão: <strong>1.0.0</strong><br>
-      Última atualização: Novembro 2025
-    </p>
-    <button class="close3" onclick="closeOverlay3()">Voltar</button>
-  </div>
-</div>
-  </div>
-
-    <div class="search-container">
-      <div class="search-wrapper">
-        <input
-          type="text"
-          id="searchInput"
-          class="search-input"
-          placeholder="Pesq filmes e séries..."
-        >
-        <span class="search-icon"><svg xmlns="http://www.w3.org/2000/svg"
-     viewBox="0 0 122.88 122.88"
-     width="20"
-     height="20"
-     style="display:block;margin:auto;background:#222;">
-  <path fill="#EFDECD" d="M42.31,0A42.31,42.31,0,0,1,77.52,65.75l8.56,8.56.09-.09a5.38,5.38,0,0,1,7.59,0l27.55,27.55a5.39,5.39,0,0,1,0,7.59l-12,12a5.39,5.39,0,0,1-7.59,0L74.22,93.76a5.38,5.38,0,0,1,0-7.59l.09-.09-8.56-8.56A42.31,42.31,0,1,1,42.31,0Zm0,9.5A32.81,32.81,0,1,1,9.5,42.31,32.81,32.81,0,0,1,42.31,9.5Z"/>
-</svg></span>
+    <div id="overlay2" class="overlay2">
+      <div class="modal2">
+        <h2>Baixar Navegadores</h2>
+        <p>Escolha um dos navegadores abaixo para instalar e abrir os conteúdos do Cine Plus AO:</p>
+        <div class="links">
+          <button class="link-btn" onclick="AppBridge.openADM()">
+            Abrir ADM Downloader
+          </button>
+          <button class="link-btn" onclick="AppBridge.openGA()">
+            Abrir GA Navegador
+          </button>
+        </div>
+        <button class="close" onclick="closeOverlay2()">Voltar</button>
       </div>
-      <button class="history-btn" id="historyBtn" onclick="openHistory()">
-        <svg xmlns="http://www.w3.org/2000/svg" 
-     viewBox="0 0 24 24" 
-     width="20" height="20" 
-     style="display:block;margin:auto;background:#222;">
-  <path fill="white" d="M13 3a9 9 0 1 0 9 9h-2a7 7 0 1 1-7-7v2l4-4-4-4v2zM12 7v6l4.5 2.7.8-1.3-3.8-2.2V7h-1.5z"/>
-</svg>
-        <span class="history-badge" id="historyBadge" style="display: none;">0</span>
-      </button>
     </div>
+
+    <button class="btn" onclick="openOverlay3()">
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10
+                 10-4.48 10-10S17.52 2 12 2zm0 3a1.5 1.5 0 1 1 0 3
+                 1.5 1.5 0 0 1 0-3zm1 14h-2v-6h2v6z"/>
+      </svg>
+      Sobre Nós
+    </button>
+
+    <!-- Overlay 3 -->
+    <div id="overlay3" class="overlay3">
+      <div class="modal3">
+        <h1>Sobre o Cine Plus AO</h1>
+        <p>
+          <strong>Cine Plus AO</strong> é um aplicativo desenvolvido para oferecer a melhor experiência
+          de filmes e séries em Angola. Nosso objetivo é criar uma plataforma simples, rápida e segura,
+          onde você pode explorar conteúdos, assistir trailers e acessar links de forma prática para baixar.
+        </p>
+        <p>
+          A nossa plataforma não hospeda nem armazena qualquer conteúdo próprio. Todo o material exibido é proveniente de terceiros.
+        </p>
+        <p>
+          Nosso objetivo é apenas <strong>informar sobre os lançamentos mais recentes</strong>, disponibilizando links para que você possa <strong>baixar</strong> os conteúdos.
+        </p>
+        <p>
+          Atualmente, não é possível assistir diretamente pelo aplicativo — a função disponível é apenas o <strong>download</strong>.
+        </p>
+        <p>
+          Os conteúdos apresentados <strong>não são permanentes</strong>: possuem curto prazo de disponibilidade. Isso significa que, a qualquer momento, títulos podem ser removidos e substituídos por novos lançamentos.
+        </p>
+        <p>
+          Desenvolvido por <strong>SIBEM</strong>
+        </p>
+        <p>
+          Versão: <strong>1.0.0</strong><br>
+          Última atualização: Novembro 2025
+        </p>
+        <button class="close3" onclick="closeOverlay3()">Voltar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="search-container">
+    <div class="search-wrapper">
+      <input
+        type="text"
+        id="searchInput"
+        class="search-input"
+        placeholder="Pesq filmes e séries..."
+      >
+      <span class="search-icon">
+        <svg xmlns="http://www.w3.org/2000/svg"
+             viewBox="0 0 122.88 122.88"
+             width="20"
+             height="20"
+             style="display:block;margin:auto;background:#222;">
+          <path fill="#EFDECD" d="M42.31,0A42.31,42.31,0,0,1,77.52,65.75l8.56,8.56.09-.09a5.38,5.38,0,0,1,7.59,0l27.55,27.55a5.39,5.39,0,0,1,0,7.59l-12,12a5.39,5.39,0,0,1-7.59,0L74.22,93.76a5.38,5.38,0,0,1,0-7.59l.09-.09-8.56-8.56A42.31,42.31,0,1,1,42.31,0Zm0,9.5A32.81,32.81,0,1,1,9.5,42.31,32.81,32.81,0,0,1,42.31,9.5Z"/>
+        </svg>
+      </span>
+    </div>
+    <button class="history-btn" id="historyBtn" onclick="openHistory()">
+      <svg xmlns="http://www.w3.org/2000/svg"
+           viewBox="0 0 24 24"
+           width="20" height="20"
+           style="display:block;margin:auto;background:#222;">
+        <path fill="white" d="M13 3a9 9 0 1 0 9 9h-2a7 7 0 1 1-7-7v2l4-4-4-4v2zM12 7v6l4.5 2.7.8-1.3-3.8-2.2V7h-1.5z"/>
+      </svg>
+      <span class="history-badge" id="historyBadge" style="display: none;">0</span>
+    </button>
   </div>
 
   <div class="filter-tabs">
@@ -992,8 +1235,9 @@
 
         <!-- Main Actions (only for movies) -->
         <div class="main-actions" id="mainActions">
-          <button id="btnGA" class="btn-main btn-ga">Baixar no G.A Navegador</button>
-          <button id="btnADM" class="btn-main btn-adm">Baixar no ADM</button>
+          <button id="btnWatch" class="btn-main btn-watch">Assistir</button>
+          <button id="btnGA" class="btn-main btn-ga">Baixar G.A Navegador</button>
+          <button id="btnADM" class="btn-main btn-adm">Baixar ADM</button>
         </div>
 
         <button class="btn-close" onclick="closeOverlay()">Voltar</button>
@@ -1016,6 +1260,52 @@
       </div>
       <div style="padding: 16px 24px;">
         <button class="btn-close" onclick="closeHistory()">Voltar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Player Overlay -->
+  <div id="playerOverlay" class="player-overlay">
+    <button class="player-close-btn" onclick="closePlayer()">✕ Fechar Player</button>
+    <div class="player-container">
+      <div class="video-wrap">
+        <video id="videoPlayer" preload="metadata">
+          <source id="videoSource" src="" type="video/mp4" >
+        </video>
+        <div class="player-overlay-content">
+          <div class="status" id="playerStatus">Pausado</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="row">
+          <button class="player-btn" id="playBtn">▶︎ Reproduzir</button>
+          <button class="player-btn" id="back10">��� 10s</button>
+          <button class="player-btn" id="fwd10">↻ 10s</button>
+          <button class="player-btn" id="fsBtn">Tela cheia</button>
+          <div class="time" id="timeLabel">00:00 / 00:00</div>
+          <div class="spacer"></div>
+        </div>
+
+        <div class="row">
+          <div class="progress-wrap">
+            <div class="buffered-bar" id="bufferedBar" style="width:0%"></div>
+            <input type="range" id="progress" class="progress" min="0" max="1000" value="0" step="1" >
+          </div>
+        </div>
+
+        <div class="row">
+          <button class="player-btn" id="muteBtn">🔇 Mudo</button>
+          <input type="range" id="volume" class="slider" min="0" max="1" value="1" step="0.01" >
+          <select id="speed" class="player-select">
+            <option value="0.5">0.5x</option>
+            <option value="0.75">0.75x</option>
+            <option value="1" selected>1x</option>
+            <option value="1.25">1.25x</option>
+            <option value="1.5">1.5x</option>
+            <option value="2">2x</option>
+          </select>
+        </div>
       </div>
     </div>
   </div>
@@ -1046,7 +1336,7 @@
         trailer: "https://www.youtube.com/embed/6HsfXtgcAE4",
         linkGA: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1061474.mp4?auth_key=9yXh4pwattcMDppLdyME6LMQytt6v1qceXnE&expires=1714447534",
         linkADM: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1061474.mp4?auth_key=9yXh4pwattcMDppLdyME6LMQytt6v1qceXnE&expires=1714447534"
-      },        
+      },
       "sr-001": {
         type: "series",
         titulo: "O Manipulado",
@@ -1065,18 +1355,14 @@
             duracao: "48min",
             linkGA: "https://f005.backblazeb2.com/file/demetr/294436/d-o-r-a-m-a-s/239385/1/dub/1.mp4?auth_key=9yXh4pwattcMDppLdyME6LMQytt6v1qceXnE&expires=1714447534",
             linkADM: "https://f005.backblazeb2.com/file/demetr/294436/d-o-r-a-m-a-s/239385/1/dub/1.mp4?auth_key=9yXh4pwattcMDppLdyME6LMQytt6v1qceXnE&expires=1714447534",
-         },
+          },
           {
             numero: "1x02",
             titulo: "",
             duracao: "45min",
             linkGA: "https://f005.backblazeb2.com/file/demetr/294436/d-o-r-a-m-a-s/239385/1/dub/2.mp4?auth_key=9yXh4pwattcMDppLdyME6LMQytt6v1qceXnE&expires=1714447534",
             linkADM: "https://f005.backblazeb2.com/file/demetr/294436/d-o-r-a-m-a-s/239385/1/dub/2.mp4?auth_key=9yXh4pwattcMDppLdyME6LMQytt6v1qceXnE&expires=1714447534",
-      },
-          
-        
-      
-     
+          },
         ]
       }
     };
@@ -1085,19 +1371,15 @@
     let currentFilter = 'all';
     let searchTerm = '';
 
-    // History Management
+    // History Management (in-memory storage)
+    let historyData = [];
+
     function addToHistory(id) {
       const item = data[id];
       if (!item) return;
 
-      /* eslint-disable-next-line no-restricted-globals */
-      let history = JSON.parse(localStorage.getItem('cinePlusHistory') || '[]');
-
-      // Remove se já existe para evitar duplicatas
-      history = history.filter(h => h.id !== id);
-
-      // Adiciona no início
-      history.unshift({
+      historyData = historyData.filter(h => h.id !== id);
+      historyData.unshift({
         id: id,
         titulo: item.titulo,
         type: item.type,
@@ -1107,22 +1389,17 @@
         timestamp: Date.now()
       });
 
-      // Limita a 20 itens
-      if (history.length > 20) {
-        history = history.slice(0, 20);
+      if (historyData.length > 20) {
+        historyData = historyData.slice(0, 20);
       }
 
-      /* eslint-disable-next-line no-restricted-globals */
-      localStorage.setItem('cinePlusHistory', JSON.stringify(history));
       updateHistoryBadge();
     }
 
     function updateHistoryBadge() {
-      /* eslint-disable-next-line no-restricted-globals */
-      const history = JSON.parse(localStorage.getItem('cinePlusHistory') || '[]');
       const badge = document.getElementById('historyBadge');
-      if (history.length > 0) {
-        badge.textContent = history.length;
+      if (historyData.length > 0) {
+        badge.textContent = historyData.length;
         badge.style.display = 'block';
       } else {
         badge.style.display = 'none';
@@ -1130,7 +1407,7 @@
     }
 
     function clearHistory() {
-      localStorage.removeItem('cinePlusHistory');
+      historyData = [];
       updateHistoryBadge();
       renderHistory();
     }
@@ -1149,10 +1426,9 @@
     }
 
     function renderHistory() {
-      const history = JSON.parse(localStorage.getItem('cinePlusHistory') || '[]');
       const historyList = document.getElementById('historyList');
 
-      if (history.length === 0) {
+      if (historyData.length === 0) {
         historyList.innerHTML = `
           <div class="empty-history">
             <div class="empty-history-icon">📭</div>
@@ -1162,7 +1438,7 @@
         return;
       }
 
-      historyList.innerHTML = history.map(item => `
+      historyList.innerHTML = historyData.map(item => `
         <div class="history-item" onclick="openFromHistory('${item.id}')">
           <img src="${item.poster}" alt="${item.titulo}" class="history-item-img">
           <div class="history-item-info">
@@ -1256,10 +1532,8 @@
       const item = data[id];
       if (!item) return;
 
-      // Adiciona ao histórico
       addToHistory(id);
 
-      // Update title and meta
       document.getElementById('modalTitle').textContent = item.titulo;
       document.getElementById('modalMeta').innerHTML = `
         <div class="modal-meta-item">
@@ -1276,18 +1550,13 @@
         </div>
       `;
 
-      // Genre tag
       document.getElementById('genreContainer').innerHTML = `
         <span class="genre-tag">${item.genero}</span>
       `;
 
-      // Description
       document.getElementById('modalDescription').textContent = item.descricao;
-
-      // Trailer
       document.getElementById('trailer').src = item.trailer;
 
-      // Episodes section (only for series)
       const episodesSection = document.getElementById('episodesSection');
       const mainActions = document.getElementById('mainActions');
 
@@ -1302,6 +1571,7 @@
                 <div class="episode-duration">${ep.duracao}</div>
               </div>
               <div class="episode-actions">
+                <button class="btn-episode btn-episode-watch" onclick="openPlayer('${ep.linkGA}')">Assistir</button>
                 <button class="btn-episode btn-episode-ga" onclick="openApp('GA', '${ep.linkGA}')">GA</button>
                 <button class="btn-episode btn-episode-adm" onclick="openApp('ADM', '${ep.linkADM}')">ADM</button>
               </div>
@@ -1312,24 +1582,17 @@
         episodesHTML += '</div>';
         episodesSection.innerHTML = episodesHTML;
         episodesSection.style.display = 'block';
-
-        // Esconder botões principais para séries
         mainActions.style.display = 'none';
       } else {
         episodesSection.style.display = 'none';
-
-        // Mostrar botões principais para filmes
         mainActions.style.display = 'flex';
       }
 
-      // Main action buttons (só para filmes)
+      document.getElementById('btnWatch').onclick = () => openPlayer(item.linkGA);
       document.getElementById('btnGA').onclick = () => openApp('GA', item.linkGA);
       document.getElementById('btnADM').onclick = () => openApp('ADM', item.linkADM);
 
-      // Update hash
       location.hash = id;
-
-      // Show overlay
       document.getElementById('overlay').classList.add('active');
     }
 
@@ -1340,12 +1603,172 @@
       location.hash = '';
     }
 
-    // Função openApp com a lógica correta
-    function openApp(id, url) {
-      // Abre a URL no WebView
-      window.location.assign(url);
+    // Player functionality
+    function openPlayer(videoUrl) {
+      const playerOverlay = document.getElementById('playerOverlay');
+      const videoPlayer = document.getElementById('videoPlayer');
+      const videoSource = document.getElementById('videoSource');
 
-      // Aguarda a URL estabilizar e chama Android
+      videoSource.src = videoUrl;
+      videoPlayer.load();
+      playerOverlay.classList.add('active');
+
+      initPlayer();
+    }
+
+    function closePlayer() {
+      const playerOverlay = document.getElementById('playerOverlay');
+      const videoPlayer = document.getElementById('videoPlayer');
+
+      videoPlayer.pause();
+      videoPlayer.currentTime = 0;
+      playerOverlay.classList.remove('active');
+    }
+
+    function initPlayer() {
+      const video = document.getElementById('videoPlayer');
+      const playBtn = document.getElementById('playBtn');
+      const back10 = document.getElementById('back10');
+      const fwd10 = document.getElementById('fwd10');
+      const fsBtn = document.getElementById('fsBtn');
+      const progress = document.getElementById('progress');
+      const bufferedBar = document.getElementById('bufferedBar');
+      const timeLabel = document.getElementById('timeLabel');
+      const muteBtn = document.getElementById('muteBtn');
+      const volume = document.getElementById('volume');
+      const speed = document.getElementById('speed');
+      const playerStatus = document.getElementById('playerStatus');
+
+      function formatTime(t) {
+        if (!isFinite(t) || t < 0) t = 0;
+        const h = Math.floor(t / 3600);
+        const m = Math.floor((t % 3600) / 60);
+        const s = Math.floor(t % 60);
+        const pad = (n) => String(n).padStart(2, '0');
+        return h > 0 ? `${h}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
+      }
+
+      function showOverlay(msg) {
+        playerStatus.textContent = msg;
+        playerStatus.classList.add('show');
+        clearTimeout(showOverlay._t);
+        showOverlay._t = setTimeout(() => playerStatus.classList.remove('show'), 800);
+      }
+
+      function updateTimeUI() {
+        const cur = formatTime(video.currentTime);
+        const dur = formatTime(video.duration);
+        timeLabel.textContent = `${cur} / ${dur}`;
+        if (isFinite(video.duration) && video.duration > 0) {
+          progress.value = Math.floor((video.currentTime / video.duration) * progress.max);
+        }
+        try {
+          if (video.buffered && video.buffered.length > 0) {
+            const end = video.buffered.end(video.buffered.length - 1);
+            const pct = Math.min(100, (end / video.duration) * 100);
+            bufferedBar.style.width = `${pct}%`;
+          }
+        } catch (e) {}
+      }
+
+      function togglePlay() {
+        if (video.paused) {
+          video.play().then(() => {
+            playBtn.textContent = '⏸ Pausar';
+            showOverlay('Reproduzindo');
+          }).catch(err => {
+            console.warn(err);
+          });
+        } else {
+          video.pause();
+          playBtn.textContent = '▶︎ Reproduzir';
+          showOverlay('Pausado');
+        }
+      }
+
+      function seekToProgress(val) {
+        if (!isFinite(video.duration) || video.duration <= 0) return;
+        const pct = val / progress.max;
+        const t = pct * video.duration;
+        video.currentTime = t;
+      }
+
+      function quickSeek(delta) {
+        const target = Math.max(0, Math.min(video.duration || 0, video.currentTime + delta));
+        video.currentTime = target;
+        showOverlay(`${delta > 0 ? '↻' : '↺'} ${Math.abs(delta)}s`);
+      }
+
+      function updateVolumeUI() {
+        if (video.muted || video.volume === 0) {
+          muteBtn.textContent = '🔈 Ativar';
+        } else {
+          muteBtn.textContent = '🔇 Mudo';
+        }
+      }
+
+      playBtn.addEventListener('click', togglePlay);
+      back10.addEventListener('click', () => quickSeek(-10));
+      fwd10.addEventListener('click', () => quickSeek(+10));
+
+      progress.addEventListener('input', (e) => seekToProgress(e.target.value));
+      video.addEventListener('timeupdate', updateTimeUI);
+      video.addEventListener('durationchange', updateTimeUI);
+      video.addEventListener('progress', updateTimeUI);
+
+      volume.addEventListener('input', (e) => {
+        video.volume = parseFloat(e.target.value);
+        if (video.volume > 0) video.muted = false;
+        updateVolumeUI();
+        showOverlay(`Vol: ${(video.volume * 100).toFixed(0)}%`);
+      });
+
+      muteBtn.addEventListener('click', () => {
+        video.muted = !video.muted;
+        updateVolumeUI();
+        showOverlay(video.muted ? 'Mudo' : 'Som ativo');
+      });
+
+      speed.addEventListener('change', (e) => {
+        video.playbackRate = parseFloat(e.target.value);
+        showOverlay(`Velocidade: ${video.playbackRate}x`);
+      });
+
+      fsBtn.addEventListener('click', async () => {
+        const container = document.querySelector('.player-container');
+        try {
+          if (!document.fullscreenElement) {
+            if (typeof AppBridge !== 'undefined' && AppBridge.enterFullscreen) {
+              AppBridge.enterFullscreen();
+            } else if (container.requestFullscreen) {
+              await container.requestFullscreen();
+            } else if (video.requestFullscreen) {
+              await video.requestFullscreen();
+            }
+            fsBtn.textContent = 'Sair da tela cheia';
+          } else {
+            if (typeof AppBridge !== 'undefined' && AppBridge.exitFullscreen) {
+              AppBridge.exitFullscreen();
+            } else {
+              await document.exitFullscreen();
+            }
+            fsBtn.textContent = 'Tela cheia';
+          }
+        } catch (e) {
+          console.warn(e);
+        }
+      });
+
+      video.addEventListener('waiting', () => showOverlay('Carregando...'));
+      video.addEventListener('playing', () => showOverlay('Reproduzindo'));
+      video.addEventListener('pause', () => showOverlay('Pausado'));
+
+      updateTimeUI();
+      updateVolumeUI();
+    }
+
+    function openApp(id, url) {
+      window.location.assign(url);
       setTimeout(function(){
         if (typeof Android !== "undefined" && Android.openApp) {
           Android.openApp(id);
@@ -1360,10 +1783,15 @@
       }
     });
 
-    // Close history when clicking outside
     document.getElementById('historyOverlay').addEventListener('click', (e) => {
       if (e.target.id === 'historyOverlay') {
         closeHistory();
+      }
+    });
+
+    document.getElementById('playerOverlay').addEventListener('click', (e) => {
+      if (e.target.id === 'playerOverlay') {
+        closePlayer();
       }
     });
 
@@ -1386,60 +1814,56 @@
         closeOverlay();
       }
     });
-  </script>
-<script>
+
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('open');
     }
+
     function openSettings() {
       const pkg = 'com.grupo.a.navegador';
-      if (typeof Android !== 'undefined' && Android1.openSettings) {
+      if (typeof Android1 !== 'undefined' && Android1.openSettings) {
         Android1.openSettings(pkg);
       } else {
-        alert('Interface Android não disponível.');
+        console.log('Interface Android não disponível.');
       }
-    }    
-    </script>
-  <script>
-  const sidebar = document.getElementById('sidebar');
-  let startX = 0;
-  let endX = 0;
-
-  // Detecta início do toque
-  sidebar.addEventListener('touchstart', (e) => {
-    startX = e.touches[0].clientX;
-  });
-
-  // Detecta movimento
-  sidebar.addEventListener('touchmove', (e) => {
-    endX = e.touches[0].clientX;
-  });
-
-  // Detecta fim do gesto
-  sidebar.addEventListener('touchend', () => {
-    const diffX = endX - startX;
-    // Se arrastou mais de 50px para a esquerda → fecha
-    if (diffX < -50) {
-      sidebar.classList.remove('open');
     }
-  });
-</script>
-<script>
-function openOverlay2() {
-  document.getElementById('overlay2').style.display = 'flex';
-}
-function closeOverlay2() {
-  document.getElementById('overlay2').style.display = 'none';
-}
-</script>
-<script>
-function openOverlay3() {
-  document.getElementById('overlay3').style.display = 'flex';
-}
-function closeOverlay3() {
-  document.getElementById('overlay3').style.display = 'none';
-}
-</script>
+
+    function openOverlay2() {
+      document.getElementById('overlay2').style.display = 'flex';
+    }
+
+    function closeOverlay2() {
+      document.getElementById('overlay2').style.display = 'none';
+    }
+
+    function openOverlay3() {
+      document.getElementById('overlay3').style.display = 'flex';
+    }
+
+    function closeOverlay3() {
+      document.getElementById('overlay3').style.display = 'none';
+    }
+
+    // Sidebar swipe to close
+    const sidebar = document.getElementById('sidebar');
+    let startX = 0;
+    let endX = 0;
+
+    sidebar.addEventListener('touchstart', (e) => {
+      startX = e.touches[0].clientX;
+    });
+
+    sidebar.addEventListener('touchmove', (e) => {
+      endX = e.touches[0].clientX;
+    });
+
+    sidebar.addEventListener('touchend', () => {
+      const diffX = endX - startX;
+      if (diffX < -50) {
+        sidebar.classList.remove('open');
+      }
+    });
+  </script>
 </body>
 </html>
 
