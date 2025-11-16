@@ -885,8 +885,7 @@
     justify-content: center;
     z-index: 5000;
     padding: 0px;
-    margin-top: 60px;
-     
+    margin-top: 70px;
   }
 
   .player-overlay.active {
@@ -1044,7 +1043,7 @@
     -webkit-appearance: none;
     width: 14px;
     height: 14px;
-    background: #e6e8ee;
+    background: #e6e8ee; se
     border-radius: 50%;
   }
 
@@ -1070,6 +1069,7 @@
     flex: 1 1 auto;
   }
 
+ 
   .player-close-btn {
     position: absolute;
     top: 10px;
@@ -1092,7 +1092,7 @@
   }
      .player-rot-btn {
     position: absolute;
-    top: 60px;
+    top: 65 sepx;
     right: 16px;
     background: rgba(0, 0, 0, 0.7);
     border: 1px solid #333;
@@ -1109,11 +1109,6 @@
   .player-rot-btn:hover {
     background: rgba(0, 0, 0, 0.9);
     border-color: #555;
-  }
-   .player-container iframe {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
   }
   </style>
 </head>
@@ -1293,7 +1288,7 @@
 
   <!-- Player Overlay -->
   <div id="playerOverlay" class="player-overlay">
-    <button class="player-close-btn" onclick="closePlayer()"><svg
+    <button class="player-close-btn" id="btnAction"><svg
   width="24" height="24" viewBox="0 0 24 24"
   xmlns="http://www.w3.org/2000/svg"
   fill="none"
@@ -1309,7 +1304,7 @@
   <polyline points="9,10 15,10 15,16" />
   <line x1="15" y1="10" x2="9" y2="16" />
 </svg></button>
-     <button class="player-rot-btn" onclick="closePlayer()"><!-- Ícone de celular com rotação (SVG), fundo transparente, cor branca -->
+        <button class="player-rot-btn" id="btnFullscreenToggle">
 <svg
   width="24" height="24" viewBox="0 0 24 24"
   xmlns="http://www.w3.org/2000/svg"
@@ -1335,9 +1330,8 @@
   <path d="M20.5 11.5a8.5 8.5 0 0 1 -5.2 7.9" />
   <polyline points="18.8,20.2 15.3,19.7 17.0,22.7" />
 </svg></button>
-  
     <div class="player-container">
-      <div class="video-wrap">        
+      <div class="video-wrap">
         <video id="videoPlayer" preload="metadata" poster="bg.jpg" width="100%" height="auto">
           <source id="videoSource" src="" type="video/mp4" >
         </video>
@@ -1356,14 +1350,11 @@
         <div class="row">
           <button class="player-btn" id="playBtn">▶︎ Reproduzir</button>
                      <div class="time" id="timeLabel">00:00 / 00:00</div>        
-          <button class="player-btn" id="back10" style="background-color:transparent;color:transparent">↺ 10s</button>
+          <button class="player-btn" id="back10" style="background-color:transparent;color:transparent">Cine Plus AO</button>
                      <button class="player-btn" id="back10">↺ 10s</button>         
           <button class="player-btn" id="fwd10">↻ 10s</button>
-          <button class="player-btn" id="fsBtn">Ver em Tela cheia</button>
+          <button class="player-btn" id="fsBtn" hidden>Ver em Tela cheia</button>
   <div class="spacer"></div>
-        </div>
-
-        
         </div>
 
         <div class="row">
@@ -1948,12 +1939,38 @@
       }
     });
   </script>
-     
-    <script>
-  const video = document.getElementById("video");
 
-  video.addEventListener("playing", function () {
-    video.removeAttribute("poster");
+<script>
+  const btn = document.getElementById("btnFullscreenToggle");
+  let isFullscreen = false;
+
+  btn.addEventListener("click", function () {
+    if (!isFullscreen) {
+      // Ativar tela cheia
+      try { AppBridge.enterFullscreen(); } catch (e) {}
+      btn.classList.remove("inactive");
+      btn.classList.add("active");
+      isFullscreen = true;
+    } else {
+      // Desativar tela cheia
+      try { AppBridge.exitFullscreen(); } catch (e) {}
+      btn.classList.remove("active");
+      btn.classList.add("inactive");
+      isFullscreen = false;
+    }
+  });
+</script>
+<script>
+  document.getElementById("btnAction").addEventListener("click", function() {
+    // 1) Recarregar página
+    try { reset.reloadPage(); } catch(e) {
+      console.log("Função reset.reloadPage não encontrada");
+    }
+
+    // 2) Desativar fullscreen
+    try { AppBridge.exitFullscreen(); } catch(e) {
+      console.log("Função AppBridge.exitFullscreen não encontrada");
+    }
   });
 </script>
 </body>
