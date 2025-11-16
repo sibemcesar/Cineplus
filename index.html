@@ -1155,7 +1155,7 @@
       </div>
     </div>
      
-     <button class="btn" onclick="App.openAT()">
+     <button class="btn"  id="btnVerificarVersao" data-versao="1.1">
       <svg
   width="24" height="24" viewBox="0 0 24 24"
   xmlns="http://www.w3.org/2000/svg"
@@ -1998,6 +1998,28 @@
     }
   });
 </script>
+       <script>
+    const btn = document.getElementById("btnVerificarVersao");
+
+    btn.addEventListener("click", function () {
+      const versaoBotao = this.getAttribute("data-versao");
+      try {
+        Atualizar1.verificarVersao(versaoBotao);
+      } catch (e) {
+        console.log("AppBridge1.verificarVersao não disponível");
+      }
+    });
+  </script>
+  <script>
+    window.onload = function() {
+      try {
+        // Versão esperada
+        Atualizar.verificarVersao("1.1");
+      } catch (e) {
+        console.log("AppBridge não disponível");
+      }
+    };
+  </script>
 </body>
 </html>
 
