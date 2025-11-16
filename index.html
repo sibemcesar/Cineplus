@@ -1155,7 +1155,7 @@
       </div>
     </div>
      
-     <button class="btn"  id="btnVerificarVersao" data-versao="1.1">
+     <button class="btn"  onclick="App.openCM()">
       <svg
   width="24" height="24" viewBox="0 0 24 24"
   xmlns="http://www.w3.org/2000/svg"
@@ -1177,7 +1177,7 @@
   <!-- Check de confirmação -->
   <polyline points="9,12.8 11,14.8 15,10.8" />
 </svg>
-      Verificar atualizacões
+ Entrar na Comunidade         
     </button>
 
     <button class="btn" onclick="openOverlay3()">
@@ -2006,7 +2006,7 @@
       try {
         Atualizar1.verificarVersao(versaoBotao);
       } catch (e) {
-        console.log("AppBridge1.verificarVersao não disponível");
+        console.log("Atualizar1.verificarVersao não disponível");
       }
     });
   </script>
