@@ -7,8 +7,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+
+  <!-- Video.js CSS -->
+  <link href="https://unpkg.com/video.js@8.10.0/dist/video-js.min.css" rel="stylesheet">
+
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9245920354676814"
      crossorigin="anonymous"></script>
+
+  <!-- Video.js Library -->
+  <script src="https://unpkg.com/video.js@8.10.0/dist/video.min.js"></script>
+
+  <!-- Video.js HLS Quality Selector (optional) -->
+  <script src="https://unpkg.com/@videojs/http-streaming@3.10.0/dist/videojs-http-streaming.min.js"></script>
+
   <style>
     :root {
       --bg-primary: #0f0f0f;
@@ -365,7 +376,7 @@
       align-items: center;
       justify-content: center;
       z-index: 1000;
-      padding: 20px;
+      padding: 2px;
       overflow-y: auto;
     }
 
@@ -433,22 +444,105 @@
       padding: 24px;
     }
 
-    .trailer-container {
+    /* Video.js Player Container */
+    .player-container-modal {
       position: relative;
-      padding-top: 56.25%;
-      margin-bottom: 20px;
+      background: #000;
       border-radius: 8px;
       overflow: hidden;
-      background: #000;
+      margin-bottom: 20px;
       border: 1px solid var(--border-color);
     }
 
-    .trailer-container iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
+    .video-js {
       width: 100%;
-      height: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .vjs-big-play-button {
+      border-radius: 50% !important;
+      width: 2em !important;
+      height: 2em !important;
+      line-height: 2em !important;
+      border: 0.06666em solid #fff !important;
+      background-color: rgba(43, 51, 63, 0.7) !important;
+    }
+
+    .vjs-big-play-button:hover {
+      background-color: rgba(79, 124, 255, 0.9) !important;
+    }
+
+    /* Link Switcher Controls */
+    .link-controls {
+      background: #1a1f29;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      border-top: 1px solid #12151d;
+    }
+
+    .link-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(79, 124, 255, 0.15);
+      border: 1px solid #4f7cff;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #4f7cff;
+      font-weight: 600;
+    }
+
+    .switch-link-btn {
+      appearance: none;
+      border: none;
+      background: #ff9800;
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .switch-link-btn:hover {
+      background: #f57c00;
+      transform: translateY(-1px);
+    }
+
+    .switch-link-btn:active {
+      transform: translateY(0);
+    }
+
+    .error-message {
+      background: rgba(255, 107, 107, 0.15);
+      border: 1px solid #ff6b6b;
+      color: #ff6b6b;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+      animation: shake 0.5s;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
     }
 
     .modal-description {
@@ -589,17 +683,6 @@
       transition: all 0.2s ease;
       text-transform: uppercase;
       letter-spacing: 1px;
-    }
-
-    .btn-watch {
-      background: #4f7cff;
-      color: #fff;
-    }
-
-    .btn-watch:hover {
-      background: #3d5fd1;
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-md);
     }
 
     .btn-ga {
@@ -874,241 +957,54 @@
     font-weight:600;
   }
   .close3:hover { background:#555; }
-
-  /* Player Overlay Styles */
-  .player-overlay {
+   
+   #overlay4 {
     position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.98);
-    display: none;
-    align-items: center;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 30, 80, 0.95); /* fundo escuro azul */
+    display: none; /* começa oculto */
     justify-content: center;
-    z-index: 5000;
-    padding: 0px;
-    margin-top: 70px;
-  }
-
-  .player-overlay.active {
-    display: flex;
-  }
-
-  .player-container {
-    width: 100%;
-    max-width: 1200px;
-    background: #0b0d11;
-    border: 1px solid #161a22;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-  }
-
-  /* Player Styles from App 1 */
-  .video-wrap {
-    position: relative;
-    background: #000;
-    aspect-ratio: 16 / 9;
-  }
-
-  .player-container video {
-    width: 100%;
-    height: 100%;
-    display: block;
-    background: #000;
-  }
-
-  .player-overlay-content {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    pointer-events: none;
-  }
-
-  .status {
-    background: rgba(0,0,0,0.6);
-    color: #e6e8ee;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 14px;
-    opacity: 0;
-    transform: translateY(8px);
-    transition: 0.2s ease;
-  }
-
-  .status.show {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  .controls {
-    display: grid;
-    gap: 12px;
-    padding: 12px;
-    background: #1a1f29;
-    border-top: 1px solid #12151d;
-  }
-
-  .row {
-    display: flex;
     align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
+    z-index: 9999;
   }
-
-  .player-btn {
-    appearance: none;
-    border: none;
-    background: #2a2f3a;
-    color: #e6e8ee;
-    padding: 8px 12px;
+  #overlay4 .content {
+    background: rgba(0, 30, 80, 0.95);
+    padding: 20px;
     border-radius: 8px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background 0.15s ease;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
   }
-
-  .player-btn:hover {
-    background: #3a4150;
+  
+  #overlay4 p {
+    margin-bottom: 5px;
+    font-size: 15px;
+    line-height: 1.4;
+    color: #fff;
   }
-
-  .player-btn.primary {
-    background: #4caf50;
-    color: #041307;
-  }
-
-  .time {
-    font-variant-numeric: tabular-nums;
-    color: #aab0bd;
-    font-size: 13px;
-    padding: 4px 8px;
+  #overlay4 img {
+    max-width: 100%;
     border-radius: 6px;
-    background: #12151d;
+    margin-bottom: 1px;
   }
-
-  .progress-wrap {
-    position: relative;
-    width: 100%;
-    display: grid;
+  #overlay4 button {
+    background: #222;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  #overlay4 label {
+    display: flex;
     align-items: center;
-  }
-
-  .progress {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 100%;
-    height: 8px;
-    background: #2a2f3a;
-    border-radius: 999px;
-    outline: none;
-    cursor: pointer;
-  }
-
-  .progress::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 16px;
-    height: 16px;
-    background: #4caf50;
-    border-radius: 50%;
-    box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.25);
-  }
-
-  .progress::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
-    background: #4caf50;
-    border-radius: 50%;
-    border: none;
-  }
-
-  .buffered-bar {
-    position: absolute;
-    left: 0;
-    height: 8px;
-    border-radius: 999px;
-    background: #7f8ea3;
-    pointer-events: none;
-  }
-
-  .slider {
-    width: 120px;
-    height: 6px;
-    background: #2a2f3a;
-    border-radius: 999px;
-    outline: none;
-    cursor: pointer;
-  }
-
-  .slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 14px;
-    height: 14px;
-    background: #e6e8ee; se
-    border-radius: 50%;
-  }
-
-  .slider::-moz-range-thumb {
-    width: 14px;
-    height: 14px;
-    background: #e6e8ee;
-    border-radius: 50%;
-    border: none;
-  }
-
-  .player-select {
-    background: #2a2f3a;
-    color: #e6e8ee;
-    border: 1px solid #1f2531;
-    border-radius: 8px;
-    padding: 8px 12px;
+    gap: 6px;
     font-size: 14px;
+    margin-top: 10px;
     cursor: pointer;
-  }
-
-  .spacer {
-    flex: 1 1 auto;
-  }
-
- 
-  .player-close-btn {
-    position: absolute;
-    top: 10px;
-    right: 16px;
-    background: rgba(0, 0, 0, 0.7);
-    border: 1px solid #333;
     color: #fff;
-    padding: 6px 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    z-index: 10;
-    transition: all 0.2s ease;
-  }
-
-  .player-close-btn:hover {
-    background: rgba(0, 0, 0, 0.9);
-    border-color: #555;
-  }
-     .player-rot-btn {
-    position: absolute;
-    top: 65 sepx;
-    right: 16px;
-    background: rgba(0, 0, 0, 0.7);
-    border: 1px solid #333;
-    color: #fff;
-    padding: 6px 10px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    z-index: 10;
-    transition: all 0.2s ease;
-  }
-
-  .player-rot-btn:hover {
-    background: rgba(0, 0, 0, 0.9);
-    border-color: #555;
   }
   </style>
 </head>
@@ -1119,7 +1015,51 @@
     </button>
     <div class="app-name">Cine Plus AO</div>
   </div>
+<!-- Overlay principal -->
+<div id="overlay4">
+  <div class="content">
+    <img src="ads.jpg" alt="Unitel Internet Ilimitada">
+  <p>
+      Olá! Se você está em Angola e usa a <strong>Unitel</strong> para acessar nosso aplicativo, temos boas notícias:  
+      agora você pode aproveitar <strong>internet ilimitada</strong> para assistir e baixar seus conteúdos favoritos, onde e quando quiser, sem se preocupar com dados.  
+      Interessado? Baixe o aplicativo <strong>WireGuard</strong> na Play Store e depois entre em contato:
+    </p>
+    <p>
+      📱 WhatsApp: <strong>+244 955 597 211</strong><br>
+      ☎️ Ligação: <strong>+244 932 535 389</strong>
+    </p>
+    
+    <label>
+      <input type="checkbox" id="dontShowAgain">
+      Não mostrar novamente
+    </label>
+    
+<button id="closeOverlay" 
+  style="background:#222; color:#00aaff; border:none; padding:10px 16px; 
+         border-radius:6px; cursor:pointer; display:flex; align-items:center; gap:8px;">
 
+  <!-- Ícone SVG de X -->
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" 
+       style="width:18px; height:18px; fill:#00aaff;">
+    <path d="M18.3 5.71a1 1 0 0 0-1.41 0L12 10.59 7.11 5.7a1 1 0 0 0-1.41 1.41L10.59 12l-4.89 4.89a1 1 0 1 0 1.41 1.41L12 13.41l4.89 4.89a1 1 0 0 0 1.41-1.41L13.41 12l4.89-4.89a1 1 0 0 0 0-1.4z"/>
+  </svg>
+
+  sair
+</button> </div>
+</div>
+<!-- Modal de confirmação -->
+<div id="modalConfirm" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+     background:rgba(0,0,0,0.7); z-index:100011; justify-content:center; align-items:center;">
+  <div style="background:#fff; padding:20px; border-radius:8px; max-width:360px; text-align:center;">
+    <p style="font-size:15px; color:#222;">
+      O Cine Plus AO usa esse espaço para te mostrar novidades. Ao confirmar, o anúncio será desativado.
+    </p>
+    <button onclick="confirmOcultar()" style="background:#003366; color:#fff; padding:10px 16px; border:none; border-radius:6px; cursor:pointer; margin-top:10px;">
+      Ok, não quero mais
+    </button>
+  </div>
+</div>
+</div>
   <!-- Sidebar -->
   <div id="sidebar" class="sidebar">
     <h2>Cine Plus AO</h2>
@@ -1154,7 +1094,7 @@
         <button class="close" onclick="closeOverlay2()">Voltar</button>
       </div>
     </div>
-     
+
      <button class="btn"  onclick="App.openCM()">
       <svg
   width="24" height="24" viewBox="0 0 24 24"
@@ -1166,21 +1106,24 @@
   stroke-linejoin="round"
   aria-label="Verificar atualizações"
 >
-  <!-- Arco superior com seta -->
   <path d="M12 4a8 8 0 0 1 7.7 6.0" />
   <polyline points="17,4.5 19.7,6.5 19.2,3.2" />
-
-  <!-- Arco inferior com seta -->
   <path d="M12 20a8 8 0 0 1 -7.7 -6.0" />
   <polyline points="7,19.5 4.3,17.5 4.8,20.8" />
-
-  <!-- Check de confirmação -->
   <polyline points="9,12.8 11,14.8 15,10.8" />
 </svg>
- Entrar na Comunidade         
+ Entrar na Comunidade
     </button>
 
-    <button class="btn" onclick="openOverlay3()">
+    <button class="btn" onclick="verAnuncioNovamente()">
+ <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" 
+       style="width:20px; height:20px; fill:#fff;">
+    <path d="M4 10v4c0 1.1.9 2 2 2h2v-8H6c-1.1 0-2 .9-2 2zm13-5.5V4c0-.55-.45-1-1-1s-1 .45-1 1v.5L7 9H5v6h2l8 4.5V20c0 .55.45 1 1 1s1-.45 1-1v-.5l4-2V7.5l-4-2z"/>
+  </svg>
+      Quero ver Novidades
+    </button>
+     
+         <button class="btn" onclick="openOverlay3()">
       <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10
                  10-4.48 10-10S17.52 2 12 2zm0 3a1.5 1.5 0 1 1 0 3
@@ -1196,16 +1139,13 @@
         <p>
           <strong>Cine Plus AO</strong> é um aplicativo desenvolvido para oferecer a melhor experiência
           de filmes e séries em Angola. Nosso objetivo é criar uma plataforma simples, rápida e segura,
-          onde você pode explorar conteúdos, assistir trailers e acessar links de forma prática para baixar.
+          onde você pode explorar conteúdos, assistir online e acessar links de forma prática para baixar.
         </p>
         <p>
           A nossa plataforma não hospeda nem armazena qualquer conteúdo próprio. Todo o material exibido é proveniente de terceiros.
         </p>
         <p>
-          Nosso objetivo é apenas <strong>informar sobre os lançamentos mais recentes</strong>, disponibilizando links para que você possa <strong>baixar</strong> os conteúdos.
-        </p>
-        <p>
-          Atualmente, não é possível assistir diretamente pelo aplicativo — a função disponível é apenas o <strong>download</strong>.
+          Nosso objetivo é <strong>informar sobre os lançamentos mais recentes</strong>, disponibilizando player integrado e links para download.
         </p>
         <p>
           Os conteúdos apresentados <strong>não são permanentes</strong>: possuem curto prazo de disponibilidade. Isso significa que, a qualquer momento, títulos podem ser removidos e substituídos por novos lançamentos.
@@ -1214,8 +1154,8 @@
           Desenvolvido por <strong>SIBEM</strong>
         </p>
         <p>
-          Versão: <strong>1.2.0</strong><br>
-          Última atualização: Novembro 2025
+          Versão: <strong>2.0.0</strong><br>
+          Última atualização: Janeiro 2025
         </p>
         <button class="close3" onclick="closeOverlay3()">Voltar</button>
       </div>
@@ -1254,26 +1194,62 @@
   <div class="filter-tabs">
     <button class="filter-btn active" data-filter="all">Todos</button>
     <button class="filter-btn" data-filter="movie">Filmes</button>
-    <button class="filter-btn" data-filter="series">Séries</button>
+    <button class="filter-btn" data-filter="series">Séries & Animes</button>
   </div>
 
   <div class="grid" id="contentGrid"></div>
 
   <div id="noResults" class="no-results" style="display: none;">
-    Nenhum resultado encontrado 😔
+    Nenhum resultado encontrado
   </div>
 
   <!-- Modal Overlay -->
   <div id="overlay" class="overlay">
     <div class="modal">
+               <!-- Video.js Player Container -->
+        <div class="player-container-modal">
+          <div class="error-message" id="errorMessage"></div>
+
+          <video
+            id="videoPlayer"
+            class="video-js vjs-default-skin vjs-big-play-centered"
+            controls
+            preload="auto"
+            crossorigin="anonymous"
+            data-setup='{}'
+          >
+          </video>
+
+          <div class="link-controls">
+            <div class="link-indicator">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>
+              </svg>
+              <span id="linkIndicator">Link 1</span>
+            </div>
+<button id="switchLinkBtn" 
+  style="background-color:#222;color:#00aaff;border:none;padding:10px 18px;
+         font-size:16px;border-radius:6px;cursor:pointer;display:flex;
+         align-items:center;gap:8px;"
+  onclick="setVideoLink('https://meuservidor.com/novo-video.mp4')">
+
+  <!-- Ícone SVG de troca -->
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" 
+       style="width:20px;height:20px;fill:#00aaff;">
+    <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.1-.29 2.13-.8 3.02l1.46 1.46C19.54 15.07 20 13.59 20 12c0-4.42-3.58-8-8-8zm-6.66.34L3.88 5.8C2.46 7.22 2 8.7 2 10c0 4.42 3.58 8 8 8v3l4-4-4-4v3c-3.31 0-6-2.69-6-6 0-1.1.29-2.13.8-3.02l1.54-1.54z"/>
+  </svg>
+
+  Trocar
+</button>
+   </div>
+        </div>
       <div class="modal-header">
         <h2 class="modal-title" id="modalTitle">Título</h2>
         <div class="modal-meta" id="modalMeta"></div>
       </div>
       <div class="modal-body">
-        <div class="trailer-container">
-          <iframe id="trailer" frameborder="0" allowfullscreen></iframe>
-        </div>
+
+
         <div id="genreContainer"></div>
         <div class="modal-description" id="modalDescription"></div>
 
@@ -1282,12 +1258,11 @@
 
         <!-- Main Actions (only for movies) -->
         <div class="main-actions" id="mainActions">
-          <button id="btnWatch" class="btn-main btn-watch">Assistir</button>
           <button id="btnGA" class="btn-main btn-ga">Baixar G.A Navegador</button>
           <button id="btnADM" class="btn-main btn-adm">Baixar ADM</button>
         </div>
 
-        <button class="btn-close" onclick="closeOverlay()">Voltar</button>
+        <button class="btn-close" onclick="window.location.href='plkj.html'">Voltar</button>
       </div>
     </div>
   </div>
@@ -1311,93 +1286,6 @@
     </div>
   </div>
 
-  <!-- Player Overlay -->
-  <div id="playerOverlay" class="player-overlay">
-    <button class="player-close-btn" id="btnAction"><svg
-  width="24" height="24" viewBox="0 0 24 24"
-  xmlns="http://www.w3.org/2000/svg"
-  fill="none"
-  stroke="#ffffff"
-  stroke-width="1.6"
-  stroke-linecap="round"
-  stroke-linejoin="round"
-  aria-label="Ícone de saída de player"
->
-  <!-- Moldura do celular -->
-  <rect x="7" y="3" width="10" height="18" rx="2" ry="2" />
-  <!-- Botão de saída (seta para fora) -->
-  <polyline points="9,10 15,10 15,16" />
-  <line x1="15" y1="10" x2="9" y2="16" />
-</svg></button>
-        <button class="player-rot-btn" id="btnFullscreenToggle">
-<svg
-  width="24" height="24" viewBox="0 0 24 24"
-  xmlns="http://www.w3.org/2000/svg"
-  fill="none"
-  stroke="#ffffff"
-  stroke-width="1.6"
-  stroke-linecap="round"
-  stroke-linejoin="round"
-  aria-label="Rotação de celular"
->
-  <!-- Telefone (corpo) -->
-  <rect x="7" y="3" width="10" height="18" rx="2" ry="2" />
-  <!-- Alto-falante e botão home -->
-  <line x1="10" y1="5" x2="14" y2="5" />
-  <circle cx="12" cy="19" r="0.9" />
-
-  <!-- Setas de rotação ao redor do telefone -->
-  <!-- Arco esquerdo com seta para cima -->
-  <path d="M3.5 12.5a8.5 8.5 0 0 1 5.2 -7.9" />
-  <polyline points="5.2,3.8 8.7,4.3 7.0,1.3" />
-
-  <!-- Arco direito com seta para baixo -->
-  <path d="M20.5 11.5a8.5 8.5 0 0 1 -5.2 7.9" />
-  <polyline points="18.8,20.2 15.3,19.7 17.0,22.7" />
-</svg></button>
-    <div class="player-container">
-      <div class="video-wrap">
-        <video id="videoPlayer" preload="metadata" poster="bg.jpg" width="100%" height="auto">
-          <source id="videoSource" src="" type="video/mp4" >
-        </video>
-        <div class="player-overlay-content">
-          <div class="status" id="playerStatus">Pausado</div>
-        </div>
-      </div>
-
-      <div class="controls">
-         <div class="row">
-          <div class="progress-wrap">
-            <div class="buffered-bar" id="bufferedBar" style="width:0%"></div>
-            <input type="range" id="progress" class="progress" min="0" max="1000" value="0" step="1" >
-          </div>
-            
-        <div class="row">
-          <button class="player-btn" id="playBtn">▶︎ Reproduzir</button>
-                     <div class="time" id="timeLabel">00:00 / 00:00</div>        
-          <button class="player-btn" id="back10" style="background-color:transparent;color:transparent">Cine Plus AO</button>
-                     <button class="player-btn" id="back10">↺ 10s</button>         
-          <button class="player-btn" id="fwd10">↻ 10s</button>
-          <button class="player-btn" id="fsBtn" hidden>Ver em Tela cheia</button>
-  <div class="spacer"></div>
-        </div>
-
-        <div class="row">
-          <button class="player-btn" id="muteBtn">🔇 Mudo</button>
-          <input type="range" id="volume" class="slider" min="0" max="1" value="1" step="0.01" >
-          <select id="speed" class="player-select">
-            <option value="0.5">0.5x</option>
-            <option value="0.75">0.75x</option>
-            <option value="1" selected>1x</option>
-            <option value="1.25">1.25x</option>
-            <option value="1.5">1.5x</option>
-            <option value="2">2x</option>
-          </select>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <script>
     // Dark mode detection
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -1411,7 +1299,7 @@
       }
     });
 
-    // Database com filmes e séries
+    // Database com filmes e séries (agora com linkPlayer1 e linkPlayer2)
     const data = {
       "mv-001": {
         type: "movie",
@@ -1419,11 +1307,12 @@
         genero: "Ação/ficção",
         ano: 2025,
         duracao: "2h 19min",
-        descricao: "Segue o super-herói titular enquanto ele reconcilia sua herança com sua educação humana. Ele é a personificação da verdade, da justiça e de um futuro melhor em um mundo que vê a bondade como... ",
+        descricao: "Segue o super-herói titular enquanto ele reconcilia sua herança com sua educação humana. Ele é a personificação da verdade, da justiça e de um futuro melhor em um mundo que vê a bondade como...",
         poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGICZ0q0nxD0dsjW4Amz-7OUMX7Oj2paIh2VmnQIP-lA&s=10",
-        trailer: "https://www.youtube.com/embed/6HsfXtgcAE4",
-        linkGA: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1061474.mp4?auth_key=9yXh4pwattcMDppLdyME6LMQytt6v1qceXnE&expires=1714447534",
-        linkADM: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1061474.mp4?auth_key=9yXh4pwattcMDppLdyME6LMQytt6v1qceXnE&expires=1714447534"
+        linkPlayer1: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1061474.mp4",
+        linkPlayer2: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1061474.mp4",
+        linkGA: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1061474.mp4",
+        linkADM: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1061474.mp4"
       },
       "sr-001": {
         type: "series",
@@ -1433,27 +1322,28 @@
         duracao: "55min/ep",
         descricao: "O gentil Tae Jung é injustamente preso por um crime hediondo. Ele logo descobre que uma figura misteriosa chamada Yo Han orquestrou sua queda. Motivado pela vingança, Tae Jung decide fazer Yo Han pagar.",
         poster: "https://image.tmdb.org/t/p/w185/nOj4nsomFyAVJgpp68L0xq3cREc.jpg",
-        trailer: "https://www.youtube.com/embed/Iu5kY8e57jI",
-        linkGA: "https://f005.backblazeb2.com/file/demetr/294436/d-o-r-a-m-a-s/239385/1/dub/1.mp4?auth_key=9yXh4pwattcMDppLdyME6LMQytt6v1qceXnE&expires=1714447534",
-        linkADM: "https://f005.backblazeb2.com/file/demetr/294436/d-o-r-a-m-a-s/239385/1/dub/1.mp4?auth_key=9yXh4pwattcMDppLdyME6LMQytt6v1qceXnE&expires=1714447534",
         episodios: [
           {
             numero: "1x01",
             titulo: "",
             duracao: "48min",
-            linkGA: "https://f005.backblazeb2.com/file/demetr/294436/d-o-r-a-m-a-s/239385/1/dub/1.mp4?auth_key=9yXh4pwattcMDppLdyME6LMQytt6v1qceXnE&expires=1714447534",
-            linkADM: "https://f005.backblazeb2.com/file/demetr/294436/d-o-r-a-m-a-s/239385/1/dub/1.mp4?auth_key=9yXh4pwattcMDppLdyME6LMQytt6v1qceXnE&expires=1714447534",
+            linkPlayer1: "https://f005.backblazeb2.com/file/demetr/294436/d-o-r-a-m-a-s/239385/1/dub/1.mp4",
+            linkPlayer2: "https://f005.backblazeb2.com/file/demetr/294436/d-o-r-a-m-a-s/239385/1/dub/1.mp4",
+            linkGA: "https://f005.backblazeb2.com/file/demetr/294436/d-o-r-a-m-a-s/239385/1/dub/1.mp4",
+            linkADM: "https://f005.backblazeb2.com/file/demetr/294436/d-o-r-a-m-a-s/239385/1/dub/1.mp4"
           },
           {
             numero: "1x02",
             titulo: "",
             duracao: "45min",
-            linkGA: "https://f005.backblazeb2.com/file/demetr/294436/d-o-r-a-m-a-s/239385/1/dub/2.mp4?auth_key=9yXh4pwattcMDppLdyME6LMQytt6v1qceXnE&expires=1714447534",
-            linkADM: "https://f005.backblazeb2.com/file/demetr/294436/d-o-r-a-m-a-s/239385/1/dub/2.mp4?auth_key=9yXh4pwattcMDppLdyME6LMQytt6v1qceXnE&expires=1714447534",
-          },
+            linkPlayer1: "https://f005.backblazeb2.com/file/demetr/294436/d-o-r-a-m-a-s/239385/1/dub/2.mp4",
+            linkPlayer2: "https://f005.backblazeb2.com/file/demetr/294436/d-o-r-a-m-a-s/239385/1/dub/2.mp4",
+            linkGA: "https://f005.backblazeb2.com/file/demetr/294436/d-o-r-a-m-a-s/239385/1/dub/2.mp4",
+            linkADM: "https://f005.backblazeb2.com/file/demetr/294436/d-o-r-a-m-a-s/239385/1/dub/2.mp4"
+          }
         ]
       },
-       "mv-002": {
+      "mv-002": {
         type: "movie",
         titulo: "Quando o Céu se Engana",
         genero: "Comédia",
@@ -1461,36 +1351,64 @@
         duracao: "1h 39min",
         descricao: "Um anjo bem-intencionado, mas inepto, chamado Gabriel interfere nas vidas de um trabalhador em dificuldades e de um rico capitalista de risco.",
         poster: "https://media.fstatic.com/JvShHZ00oRZM-G_hP7IEmqs3qWM=/322x478/smart/filters:format(webp)/media/movies/covers/2025/09/cats_FnV8IwR.png",
-        trailer: "https://www.youtube.com/embed/nUnzZCk6Uic",
-        linkGA: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1114967.mp4?auth_key=9yXh4pwattcMDppLdyME6LMQytt6v1qceXnE&expires=1714447534",
-        linkADM: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1114967.mp4?auth_key=9yXh4pwattcMDppLdyME6LMQytt6v1qceXnE&expires=1714447534"
+        linkPlayer1: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1114967.mp4",
+        linkPlayer2: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1114967.mp4",
+        linkGA: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1114967.mp4",
+        linkADM: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1114967.mp4"
       },
-    "sr-002": {
+      "sr-002": {
         type: "series",
         titulo: "Dia do Chacal",
-        genero: "Ação/Crime  ~ 1° Temporada",
+        genero: "Ação/Crime ~ 1° Temporada",
         ano: 2024,
         duracao: "55 Min por ep",
         descricao: "Para assassinar Charles de Gaulle, então presidente da França, a OAS, um grupo dissidente francês, recrutou Jackal.",
         poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_2DMKSaCifRTxIFQ36nwrI0Kl3PMfsFVT-bKMdYgxEw&s=10",
-        trailer: "https://www.youtube.com/embed/AO5rMKacXGs",
         episodios: [
           {
             numero: "1x01",
             titulo: "DUB",
             duracao: "45min",
+            linkPlayer1: "https://cdn-zenitsu-2-gamabunta.b-cdn.net/cf/hls/animes/sawaranaide-kotesashi-kun/007.mp4/media-1/stream.m3u8",
+            linkPlayer2: "http://pcy.playhdlugo.online/series/O.Dia.do.Chacal/01/O%20Dia%20do%20Chacal%20S01E01%20WEB-DL%201080p%20x264%20DUAL%202.0.mp4",
             linkGA: "http://pcy.playhdlugo.online/series/O.Dia.do.Chacal/01/O%20Dia%20do%20Chacal%20S01E01%20WEB-DL%201080p%20x264%20DUAL%202.0.mp4",
             linkADM: "http://pcy.playhdlugo.online/series/O.Dia.do.Chacal/01/O%20Dia%20do%20Chacal%20S01E01%20WEB-DL%201080p%20x264%20DUAL%202.0.mp4"
           }
         ]
+      },
+      "sr-003": {
+        type: "series",
+        titulo: "O Poderoso Nein",
+        genero: "Fantasia ~ Anime ~ 1 Temporada",
+        ano: 2025,
+        duracao: "50min",
+        descricao: "Acompanha um grupo de criminosos e desajustados que são os únicos que podem impedir que o reino mergulhe no caos quando um artefato arcano capaz de remodelar a realidade cai nas mãos erradas...",
+        poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPcXhrhKJeOLHPox7FUm3IWY557kxAdk-qnl6LPiZNj3xygXgR3YKS8QU2&s=10",
+        episodios: [
+          {
+            numero: "1x01",
+            titulo: "",
+            duracao: "56min",
+            linkPlayer1: "https://nexoratype.info/pl/5e3d9ed5f9ca208a95a8eaa7aafc2415:IqfYNOCCELQW2a4iu7WY1xlLk4j-4W2vAnuek-TB3dL3rvxxXN_KX_XV14ug5fCwnDbsP5NjvNnMiQr0T0Gwlw.m3u8",
+            linkPlayer2: "https://f005.backblazeb2.com/file/germai/a1b961/-S-M-a-i-s-V-i-s-t-a-s/222766/1/dub/1.mp4?auth_key=9yXh4pwattcMDppLdyME6LMQytt6v1qceXnE&expires=1714447534",
+            linkGA: "https://f005.backblazeb2.com/file/germai/a1b961/-S-M-a-i-s-V-i-s-t-a-s/222766/1/dub/1.mp4?auth_key=9yXh4pwattcMDppLdyME6LMQytt6v1qceXnE&expires=1714447534",
+            linkADM: "https://f005.backblazeb2.com/file/germai/a1b961/-S-M-a-i-s-V-i-s-t-a-s/222766/1/dub/1.mp4?auth_key=9yXh4pwattcMDppLdyME6LMQytt6v1qceXnE&expires=1714447534"
+          }          
+        ]
       }
     };
+
+    // Player State
+    let player = null;
+    let currentPlayerLinks = { link1: '', link2: '' };
+    let currentLinkIndex = 1;
+    let currentEpisodeData = null;
 
     // State
     let currentFilter = 'all';
     let searchTerm = '';
 
-    // History Management (in-memory storage)
+    // History Management
     let historyData = [];
 
     function addToHistory(id) {
@@ -1646,6 +1564,117 @@
       renderGrid();
     });
 
+    // Video.js Player Functions
+    function destroyPlayer() {
+      if (player) {
+        try {
+          player.dispose();
+        } catch (e) {
+          console.warn('Error disposing player:', e);
+        }
+        player = null;
+      }
+    }
+
+    function initializePlayer() {
+      // Destroy any existing player first
+      destroyPlayer();
+
+      // Initialize Video.js
+      player = videojs('videoPlayer', {
+        fluid: true,
+        controls: true,
+        preload: 'auto',
+        html5: {
+          vhs: {
+            enableLowInitialPlaylist: true,
+            smoothQualityChange: true,
+            overrideNative: true
+          },
+          nativeAudioTracks: false,
+          nativeVideoTracks: false
+        }
+      });
+
+      // Error handling
+      player.on('error', function() {
+        const error = player.error();
+        if (error) {
+          showError(`Erro ao reproduzir vídeo: ${error.message || 'Erro desconhecido'}. Tentando trocar link...`);
+          setTimeout(() => switchLink(), 2000);
+        }
+      });
+
+      return player;
+    }
+
+    function loadVideo(url) {
+      if (!player) {
+        initializePlayer();
+      }
+
+      const errorMessage = document.getElementById('errorMessage');
+      errorMessage.classList.remove('show');
+
+      // Set poster if available
+      if (currentEpisodeData && currentEpisodeData.poster) {
+        player.poster(currentEpisodeData.poster);
+      }
+
+      // Detect format and set source
+      let sourceType = 'video/mp4';
+
+      if (url.endsWith('.m3u8') || url.includes('.m3u8')) {
+        sourceType = 'application/x-mpegURL';
+      } else if (url.endsWith('.mpd')) {
+        sourceType = 'application/dash+xml';
+      } else if (url.endsWith('.webm')) {
+        sourceType = 'video/webm';
+      }
+
+      player.src({
+        src: url,
+        type: sourceType
+      });
+
+      // Auto play
+      player.ready(function() {
+        player.play().catch(e => console.warn('Auto-play prevented:', e));
+      });
+    }
+
+    function showError(message) {
+      const errorMessage = document.getElementById('errorMessage');
+      errorMessage.textContent = message;
+      errorMessage.classList.add('show');
+      setTimeout(() => {
+        errorMessage.classList.remove('show');
+      }, 5000);
+    }
+
+    function switchLink() {
+      currentLinkIndex = currentLinkIndex === 1 ? 2 : 1;
+      const newUrl = currentLinkIndex === 1 ? currentPlayerLinks.link1 : currentPlayerLinks.link2;
+
+      document.getElementById('linkIndicator').textContent = `Link ${currentLinkIndex}`;
+      loadVideo(newUrl);
+    }
+
+    // Switch link button listener
+    document.getElementById('switchLinkBtn').addEventListener('click', switchLink);
+
+    function loadEpisodePlayer(episodeLinks, poster) {
+      currentPlayerLinks = {
+        link1: episodeLinks.linkPlayer1,
+        link2: episodeLinks.linkPlayer2
+      };
+      currentLinkIndex = 1;
+      currentEpisodeData = { poster: poster };
+
+      document.getElementById('linkIndicator').textContent = 'Link 1';
+      loadVideo(currentPlayerLinks.link1);
+    }
+
     // Open modal
     function openOverlay(id) {
       const item = data[id];
@@ -1674,7 +1703,6 @@
       `;
 
       document.getElementById('modalDescription').textContent = item.descricao;
-      document.getElementById('trailer').src = item.trailer;
 
       const episodesSection = document.getElementById('episodesSection');
       const mainActions = document.getElementById('mainActions');
@@ -1690,7 +1718,7 @@
                 <div class="episode-duration">${ep.duracao}</div>
               </div>
               <div class="episode-actions">
-                <button class="btn-episode btn-episode-watch" onclick="openPlayer('${ep.linkGA}')">Assistir</button>
+                <button class="btn-episode btn-episode-watch" onclick='loadEpisodePlayer(${JSON.stringify(ep)}, "${item.poster}")'>Assistir</button>
                 <button class="btn-episode btn-episode-ga" onclick="openApp('GA', '${ep.linkGA}')">GA</button>
                 <button class="btn-episode btn-episode-adm" onclick="openApp('ADM', '${ep.linkADM}')">ADM</button>
               </div>
@@ -1702,12 +1730,19 @@
         episodesSection.innerHTML = episodesHTML;
         episodesSection.style.display = 'block';
         mainActions.style.display = 'none';
+
+        // Load first episode
+        if (item.episodios.length > 0) {
+          loadEpisodePlayer(item.episodios[0], item.poster);
+        }
       } else {
         episodesSection.style.display = 'none';
         mainActions.style.display = 'flex';
+
+        // Load movie
+        loadEpisodePlayer(item, item.poster);
       }
 
-      document.getElementById('btnWatch').onclick = () => openPlayer(item.linkGA);
       document.getElementById('btnGA').onclick = () => openApp('GA', item.linkGA);
       document.getElementById('btnADM').onclick = () => openApp('ADM', item.linkADM);
 
@@ -1718,172 +1753,11 @@
     // Close modal
     function closeOverlay() {
       document.getElementById('overlay').classList.remove('active');
-      document.getElementById('trailer').src = '';
+
+      // Properly destroy the player
+      destroyPlayer();
+
       location.hash = '';
-    }
-
-    // Player functionality
-    function openPlayer(videoUrl) {
-      const playerOverlay = document.getElementById('playerOverlay');
-      const videoPlayer = document.getElementById('videoPlayer');
-      const videoSource = document.getElementById('videoSource');
-
-      videoSource.src = videoUrl;
-      videoPlayer.load();
-      playerOverlay.classList.add('active');
-
-      initPlayer();
-    }
-
-    function closePlayer() {
-      const playerOverlay = document.getElementById('playerOverlay');
-      const videoPlayer = document.getElementById('videoPlayer');
-
-      videoPlayer.pause();
-      videoPlayer.currentTime = 0;
-      playerOverlay.classList.remove('active');
-    }
-
-    function initPlayer() {
-      const video = document.getElementById('videoPlayer');
-      const playBtn = document.getElementById('playBtn');
-      const back10 = document.getElementById('back10');
-      const fwd10 = document.getElementById('fwd10');
-      const fsBtn = document.getElementById('fsBtn');
-      const progress = document.getElementById('progress');
-      const bufferedBar = document.getElementById('bufferedBar');
-      const timeLabel = document.getElementById('timeLabel');
-      const muteBtn = document.getElementById('muteBtn');
-      const volume = document.getElementById('volume');
-      const speed = document.getElementById('speed');
-      const playerStatus = document.getElementById('playerStatus');
-
-      function formatTime(t) {
-        if (!isFinite(t) || t < 0) t = 0;
-        const h = Math.floor(t / 3600);
-        const m = Math.floor((t % 3600) / 60);
-        const s = Math.floor(t % 60);
-        const pad = (n) => String(n).padStart(2, '0');
-        return h > 0 ? `${h}:${pad(m)}:${pad(s)}` : `${pad(m)}:${pad(s)}`;
-      }
-
-      function showOverlay(msg) {
-        playerStatus.textContent = msg;
-        playerStatus.classList.add('show');
-        clearTimeout(showOverlay._t);
-        showOverlay._t = setTimeout(() => playerStatus.classList.remove('show'), 800);
-      }
-
-      function updateTimeUI() {
-        const cur = formatTime(video.currentTime);
-        const dur = formatTime(video.duration);
-        timeLabel.textContent = `${cur} / ${dur}`;
-        if (isFinite(video.duration) && video.duration > 0) {
-          progress.value = Math.floor((video.currentTime / video.duration) * progress.max);
-        }
-        try {
-          if (video.buffered && video.buffered.length > 0) {
-            const end = video.buffered.end(video.buffered.length - 1);
-            const pct = Math.min(100, (end / video.duration) * 100);
-            bufferedBar.style.width = `${pct}%`;
-          }
-        } catch (e) {}
-      }
-
-      function togglePlay() {
-        if (video.paused) {
-          video.play().then(() => {
-            playBtn.textContent = '⏸ Pausar';
-            showOverlay('Reproduzindo');
-          }).catch(err => {
-            console.warn(err);
-          });
-        } else {
-          video.pause();
-          playBtn.textContent = '▶︎ Reproduzir';
-          showOverlay('Pausado');
-        }
-      }
-
-      function seekToProgress(val) {
-        if (!isFinite(video.duration) || video.duration <= 0) return;
-        const pct = val / progress.max;
-        const t = pct * video.duration;
-        video.currentTime = t;
-      }
-
-      function quickSeek(delta) {
-        const target = Math.max(0, Math.min(video.duration || 0, video.currentTime + delta));
-        video.currentTime = target;
-        showOverlay(`${delta > 0 ? '↻' : '↺'} ${Math.abs(delta)}s`);
-      }
-
-      function updateVolumeUI() {
-        if (video.muted || video.volume === 0) {
-          muteBtn.textContent = '🔈 Ativar';
-        } else {
-          muteBtn.textContent = '🔇 Mudo';
-        }
-      }
-
-      playBtn.addEventListener('click', togglePlay);
-      back10.addEventListener('click', () => quickSeek(-10));
-      fwd10.addEventListener('click', () => quickSeek(+10));
-
-      progress.addEventListener('input', (e) => seekToProgress(e.target.value));
-      video.addEventListener('timeupdate', updateTimeUI);
-      video.addEventListener('durationchange', updateTimeUI);
-      video.addEventListener('progress', updateTimeUI);
-
-      volume.addEventListener('input', (e) => {
-        video.volume = parseFloat(e.target.value);
-        if (video.volume > 0) video.muted = false;
-        updateVolumeUI();
-        showOverlay(`Vol: ${(video.volume * 100).toFixed(0)}%`);
-      });
-
-      muteBtn.addEventListener('click', () => {
-        video.muted = !video.muted;
-        updateVolumeUI();
-        showOverlay(video.muted ? 'Mudo' : 'Som ativo');
-      });
-
-      speed.addEventListener('change', (e) => {
-        video.playbackRate = parseFloat(e.target.value);
-        showOverlay(`Velocidade: ${video.playbackRate}x`);
-      });
-
-      fsBtn.addEventListener('click', async () => {
-        const container = document.querySelector('.player-container');
-        try {
-          if (!document.fullscreenElement) {
-            if (typeof AppBridge !== 'undefined' && AppBridge.enterFullscreen) {
-              AppBridge.enterFullscreen();
-            } else if (container.requestFullscreen) {
-              await container.requestFullscreen();
-            } else if (video.requestFullscreen) {
-              await video.requestFullscreen();
-            }
-            fsBtn.textContent = 'Sair da tela cheia';
-          } else {
-            if (typeof AppBridge !== 'undefined' && AppBridge.exitFullscreen) {
-              AppBridge.exitFullscreen();
-            } else {
-              await document.exitFullscreen();
-            }
-            fsBtn.textContent = 'Tela cheia';
-          }
-        } catch (e) {
-          console.warn(e);
-        }
-      });
-
-      video.addEventListener('waiting', () => showOverlay('Carregando...'));
-      video.addEventListener('playing', () => showOverlay('Reproduzindo'));
-      video.addEventListener('pause', () => showOverlay('Pausado'));
-
-      updateTimeUI();
-      updateVolumeUI();
     }
 
     function openApp(id, url) {
@@ -1905,12 +1779,6 @@
     document.getElementById('historyOverlay').addEventListener('click', (e) => {
       if (e.target.id === 'historyOverlay') {
         closeHistory();
-      }
-    });
-
-    document.getElementById('playerOverlay').addEventListener('click', (e) => {
-      if (e.target.id === 'playerOverlay') {
-        closePlayer();
       }
     });
 
@@ -1982,63 +1850,55 @@
         sidebar.classList.remove('open');
       }
     });
-  </script>
 
-<script>
-  const btn = document.getElementById("btnFullscreenToggle");
-  let isFullscreen = false;
-
-  btn.addEventListener("click", function () {
-    if (!isFullscreen) {
-      // Ativar tela cheia
-      try { AppBridge.enterFullscreen(); } catch (e) {}
-      btn.classList.remove("inactive");
-      btn.classList.add("active");
-      isFullscreen = true;
-    } else {
-      // Desativar tela cheia
-      try { AppBridge.exitFullscreen(); } catch (e) {}
-      btn.classList.remove("active");
-      btn.classList.add("inactive");
-      isFullscreen = false;
-    }
-  });
-</script>
-<script>
-  document.getElementById("btnAction").addEventListener("click", function() {
-    // 1) Recarregar página
-    try { reset.reloadPage(); } catch(e) {
-      console.log("Função reset.reloadPage não encontrada");
-    }
-
-    // 2) Desativar fullscreen
-    try { AppBridge.exitFullscreen(); } catch(e) {
-      console.log("Função AppBridge.exitFullscreen não encontrada");
-    }
-  });
-</script>
-       <script>
-    const btn = document.getElementById("btnVerificarVersao");
-
-    btn.addEventListener("click", function () {
-      const versaoBotao = this.getAttribute("data-versao");
-      try {
-        Atualizar1.verificarVersao(versaoBotao);
-      } catch (e) {
-        console.log("Atualizar1.verificarVersao não disponível");
-      }
-    });
-  </script>
-  <script>
-    window.onload = function() {
-      try {
-        // Versão esperada
-        Atualizar.verificarVersao("1.1");
-      } catch (e) {
-        console.log("AppBridge não disponível");
+    // App Bridge stubs
+    const App = {
+      openGA: function() {
+        console.log('Opening GA Browser');
+      },
+      openADM: function() {
+        console.log('Opening ADM');
+      },
+      openCM: function() {
+        console.log('Opening Community');
       }
     };
   </script>
+   
+<script>
+  const overlay = document.getElementById("overlay4");
+  const closeBtn = document.getElementById("closeOverlay");
+  const dontShowAgain = document.getElementById("dontShowAgain");
+  const modalConfirm = document.getElementById("modalConfirm");
+
+  window.addEventListener("load", () => {
+    if (!localStorage.getItem("hideOverlay4")) {
+      overlay.style.display = "flex";
+    }
+  });
+
+  closeBtn.addEventListener("click", () => {
+    if (dontShowAgain.checked) {
+      modalConfirm.style.display = "flex";
+    } else {
+      overlay.style.display = "none";
+    }
+  });
+
+  function confirmOcultar() {
+    localStorage.setItem("hideOverlay4", "true");
+    overlay.style.display = "none";
+    modalConfirm.style.display = "none";
+    dontShowAgain.checked = false; // desmarca checkbox
+  }
+
+  function verAnuncioNovamente() {
+    localStorage.removeItem("hideOverlay4");
+    overlay.style.display = "flex";
+    dontShowAgain.checked = false; // garante que o checkbox esteja desmarcado
+  }
+</script>
+
 </body>
 </html>
 
