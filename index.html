@@ -28,6 +28,9 @@
       --accent-primary: #f5f5f5;
       --accent-secondary: #d4d4d4;
       --accent-green: #7c9885;
+      --accent-anime: #ff6b9d;
+      --accent-animation: #ffa500;
+      --accent-dorama: #9370db;
       --text-primary: #f5f5f5;
       --text-secondary: #c4c4c4;
       --text-muted: #888888;
@@ -337,6 +340,21 @@
       color: var(--bg-primary);
     }
 
+    .card-type.anime {
+      background: rgba(255, 107, 157, 0.9);
+      color: #fff;
+    }
+
+    .card-type.animation {
+      background: rgba(255, 165, 0, 0.9);
+      color: var(--bg-primary);
+    }
+
+    .card-type.dorama {
+      background: rgba(147, 112, 219, 0.9);
+      color: #fff;
+    }
+
     .card-info {
       padding: 10px;
     }
@@ -366,34 +384,34 @@
       font-weight: 600;
     }
 
-    /* Modal Overlay */
+    /* Modal Overlay FIXO */
     .overlay {
       position: fixed;
       inset: 0;
       background: rgba(15, 15, 15, 0.96);
       backdrop-filter: blur(8px);
       display: none;
-      align-items: center;
-      justify-content: center;
       z-index: 1000;
-      padding: 2px;
       overflow-y: auto;
     }
 
     .overlay.active {
-      display: flex;
+      display: block;
+    }
+
+    /* Player fixo no topo */
+    .fixed-player-container {
+      position: sticky;
+      top: 0;
+      background: #000;
+      z-index: 1001;
+      border-bottom: 2px solid var(--accent-primary);
     }
 
     .modal {
       background: var(--bg-secondary);
-      border-radius: 12px;
-      max-width: 700px;
-      width: 100%;
-      border: 1px solid var(--border-color);
-      box-shadow: var(--shadow-md);
+      min-height: 100vh;
       animation: modalSlideIn 0.3s ease;
-      max-height: 90vh;
-      overflow-y: auto;
     }
 
     @keyframes modalSlideIn {
@@ -448,10 +466,7 @@
     .player-container-modal {
       position: relative;
       background: #000;
-      border-radius: 8px;
       overflow: hidden;
-      margin-bottom: 20px;
-      border: 1px solid var(--border-color);
     }
 
     .video-js {
@@ -574,7 +589,7 @@
       color: #ff6b6b;
       padding: 12px;
       border-radius: 8px;
-      margin-bottom: 12px;
+      margin: 12px;
       font-size: 14px;
       display: none;
     }
@@ -609,19 +624,105 @@
       margin-bottom: 20px;
     }
 
-    /* Episodes Section */
-    .episodes-section {
-      margin-top: 24px;
-      padding-top: 24px;
-      border-top: 1px solid var(--border-color);
+    /* Botão para abrir modal de episódios */
+    .episodes-modal-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent-green);
+      border: none;
+      border-radius: 8px;
+      color: var(--bg-primary);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
-    .episodes-title {
+    .episodes-modal-btn:hover {
+      background: #6a8574;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    /* Modal de Episódios */
+    .episodes-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 20px;
+    }
+
+    .episodes-modal-overlay.active {
+      display: flex;
+    }
+
+    .episodes-modal {
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      max-width: 700px;
+      width: 100%;
+      max-height: 80vh;
+      overflow-y: auto;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-md);
+      animation: modalSlideIn 0.3s ease;
+    }
+
+    .episodes-modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      background: var(--bg-secondary);
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .episodes-modal-header h3 {
       font-family: 'Playfair Display', serif;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 700;
       color: var(--accent-green);
-      margin-bottom: 16px;
+    }
+
+    .episodes-modal-close {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-size: 20px;
+      transition: all 0.2s ease;
+    }
+
+    .episodes-modal-close:hover {
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+      transform: rotate(90deg);
+    }
+
+    .episodes-modal-body {
+      padding: 16px 24px 24px;
     }
 
     .episode-item {
@@ -635,6 +736,7 @@
       gap: 12px;
       border: 1px solid var(--border-color);
       transition: all 0.2s ease;
+      cursor: pointer;
     }
 
     .episode-item:hover {
@@ -1002,6 +1104,17 @@
     font-weight:600;
   }
   .close3:hover { background:#555; }
+
+  /* Overlay para histórico */
+  .overlay.history-overlay {
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .overlay.history-overlay.active {
+    display: flex;
+  }
   </style>
 </head>
 <body>
@@ -1098,7 +1211,7 @@
           Desenvolvido por <strong>SIBEM</strong>
         </p>
         <p>
-          Versão: <strong>2.0.0</strong><br>
+          Versão: <strong>2.1.0</strong><br>
           Última atualização: Janeiro 2025
         </p>
         <button class="close3" onclick="closeOverlay3()">Voltar</button>
@@ -1112,7 +1225,7 @@
         type="text"
         id="searchInput"
         class="search-input"
-        placeholder="Pesq filmes e séries..."
+        placeholder="Pesquisar conteúdo..."
       >
       <span class="search-icon">
         <svg xmlns="http://www.w3.org/2000/svg"
@@ -1138,7 +1251,10 @@
   <div class="filter-tabs">
     <button class="filter-btn active" data-filter="all">Todos</button>
     <button class="filter-btn" data-filter="movie">Filmes</button>
-    <button class="filter-btn" data-filter="series">Séries & Animes</button>
+    <button class="filter-btn" data-filter="series">Séries</button>
+    <button class="filter-btn" data-filter="anime">Animes</button>
+    <button class="filter-btn" data-filter="animation">Animação</button>
+    <button class="filter-btn" data-filter="dorama">Doramas</button>
   </div>
 
   <div class="grid" id="contentGrid"></div>
@@ -1147,46 +1263,49 @@
     Nenhum resultado encontrado
   </div>
 
-  <!-- Modal Overlay -->
+  <!-- Modal Overlay com Player Fixo -->
   <div id="overlay" class="overlay">
     <div class="modal">
-      <!-- Video.js Player Container -->
-      <div class="player-container-modal">
-        <div class="error-message" id="errorMessage"></div>
+      <!-- Player fixo no topo -->
+      <div class="fixed-player-container">
+        <div class="player-container-modal">
+          <div class="error-message" id="errorMessage"></div>
 
-        <!-- Fullscreen Toggle Button -->
-        <button id="btnFullscreenToggle" class="fullscreen-toggle-btn inactive" title="Alternar Tela Cheia">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-            <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
-          </svg>
-        </button>
-
-        <video
-          id="videoPlayer"
-          class="video-js vjs-default-skin vjs-big-play-centered"
-          controls
-          preload="auto"
-          data-setup='{}'
-        >
-        </video>
-
-        <div class="link-controls">
-          <div class="link-indicator">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>
+          <!-- Fullscreen Toggle Button -->
+          <button id="btnFullscreenToggle" class="fullscreen-toggle-btn inactive" title="Alternar Tela Cheia">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+              <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
             </svg>
-            <span id="linkIndicator">Link 1</span>
-          </div>
-          <button id="switchLinkBtn" class="switch-link-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-                 style="width:16px;height:16px;fill:#fff;">
-              <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.1-.29 2.13-.8 3.02l1.46 1.46C19.54 15.07 20 13.59 20 12c0-4.42-3.58-8-8-8zm-6.66.34L3.88 5.8C2.46 7.22 2 8.7 2 10c0 4.42 3.58 8 8 8v3l4-4-4-4v3c-3.31 0-6-2.69-6-6 0-1.1.29-2.13.8-3.02l1.54-1.54z"/>
-            </svg>
-            Trocar Link
           </button>
+
+          <video
+            id="videoPlayer"
+            class="video-js vjs-default-skin vjs-big-play-centered"
+            controls
+            preload="auto"
+            data-setup='{}'
+          >
+          </video>
+
+          <div class="link-controls">
+            <div class="link-indicator">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/>
+              </svg>
+              <span id="linkIndicator">Link 1</span>
+            </div>
+            <button id="switchLinkBtn" class="switch-link-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                   style="width:16px;height:16px;fill:#fff;">
+                <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.1-.29 2.13-.8 3.02l1.46 1.46C19.54 15.07 20 13.59 20 12c0-4.42-3.58-8-8-8zm-6.66.34L3.88 5.8C2.46 7.22 2 8.7 2 10c0 4.42 3.58 8 8 8v3l4-4-4-4v3c-3.31 0-6-2.69-6-6 0-1.1.29-2.13.8-3.02l1.54-1.54z"/>
+              </svg>
+              Trocar Link
+            </button>
+          </div>
         </div>
       </div>
 
+      <!-- Conteúdo scrollável -->
       <div class="modal-header">
         <h2 class="modal-title" id="modalTitle">Título</h2>
         <div class="modal-meta" id="modalMeta"></div>
@@ -1195,8 +1314,15 @@
         <div id="genreContainer"></div>
         <div class="modal-description" id="modalDescription"></div>
 
-        <!-- Episodes Section (only for series) -->
-        <div id="episodesSection" style="display: none;"></div>
+        <!-- Botão para abrir modal de episódios (somente para séries) -->
+        <div id="episodesButtonContainer" style="display: none;">
+          <button class="episodes-modal-btn" onclick="openEpisodesModal()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+              <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+            </svg>
+            Ver Episódios
+          </button>
+        </div>
 
         <!-- Main Actions (only for movies) -->
         <div class="main-actions" id="mainActions">
@@ -1209,8 +1335,21 @@
     </div>
   </div>
 
+  <!-- Modal de Episódios -->
+  <div id="episodesModalOverlay" class="episodes-modal-overlay">
+    <div class="episodes-modal">
+      <div class="episodes-modal-header">
+        <h3>Episódios</h3>
+        <button class="episodes-modal-close" onclick="closeEpisodesModal()">×</button>
+      </div>
+      <div class="episodes-modal-body" id="episodesModalBody">
+        <!-- Episodes will be rendered here -->
+      </div>
+    </div>
+  </div>
+
   <!-- History Overlay -->
-  <div id="historyOverlay" class="overlay">
+  <div id="historyOverlay" class="overlay history-overlay">
     <div class="history-modal">
       <div class="history-header">
         <h2>Histórico</h2>
@@ -1241,7 +1380,7 @@
       }
     });
 
-    // Database com filmes e séries
+    // Database com filmes, séries, animes, animações e doramas
     const data = {
       "mv-001": {
         type: "movie",
@@ -1258,8 +1397,37 @@
       },
       "sr-001": {
         type: "series",
+        titulo: "Dia do Chacal",
+        genero: "Ação/Crime",
+        ano: 2024,
+        duracao: "55 Min por ep",
+        descricao: "Para assassinar Charles de Gaulle, então presidente da França, a OAS, um grupo dissidente francês, recrutou Jackal.",
+        poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_2DMKSaCifRTxIFQ36nwrI0Kl3PMfsFVT-bKMdYgxEw&s=10",
+        episodios: [
+          {
+            numero: "1x01",
+            titulo: "DUB",
+            duracao: "45min",
+            linkPlayer1: "https://cdn-zenitsu-2-gamabunta.b-cdn.net/cf/hls/animes/sawaranaide-kotesashi-kun/007.mp4/media-1/stream.m3u8",
+            linkPlayer2: "https://cdn-zenitsu-2-gamabunta.b-cdn.net/cf/hls/animes/sawaranaide-kotesashi-kun/007.mp4/media-1/stream.m3u8",
+            linkGA: "https://cdn-zenitsu-2-gamabunta.b-cdn.net/cf/hls/animes/sawaranaide-kotesashi-kun/007.mp4/media-1/stream.m3u8",
+            linkADM: "https://cdn-zenitsu-2-gamabunta.b-cdn.net/cf/hls/animes/sawaranaide-kotesashi-kun/007.mp4/media-1/stream.m3u8"
+          },
+          {
+            numero: "1x02",
+            titulo: "DUB",
+            duracao: "45min",
+            linkPlayer1: "https://cdn-zenitsu-2-gamabunta.b-cdn.net/cf/hls/animes/sawaranaide-kotesashi-kun/007.mp4/media-1/stream.m3u8",
+            linkPlayer2: "https://cdn-zenitsu-2-gamabunta.b-cdn.net/cf/hls/animes/sawaranaide-kotesashi-kun/007.mp4/media-1/stream.m3u8",
+            linkGA: "https://cdn-zenitsu-2-gamabunta.b-cdn.net/cf/hls/animes/sawaranaide-kotesashi-kun/007.mp4/media-1/stream.m3u8",
+            linkADM: "https://cdn-zenitsu-2-gamabunta.b-cdn.net/cf/hls/animes/sawaranaide-kotesashi-kun/007.mp4/media-1/stream.m3u8"
+          }
+        ]
+      },
+      "dr-001": {
+        type: "dorama",
         titulo: "O Manipulado",
-        genero: "Crime/dorama ~ 1 Temporada",
+        genero: "Crime/Dorama",
         ano: 2025,
         duracao: "55min/ep",
         descricao: "O gentil Tae Jung é injustamente preso por um crime hediondo. Ele logo descobre que uma figura misteriosa chamada Yo Han orquestrou sua queda. Motivado pela vingança, Tae Jung decide fazer Yo Han pagar.",
@@ -1285,43 +1453,10 @@
           }
         ]
       },
-      "mv-002": {
-        type: "movie",
-        titulo: "Quando o Céu se Engana",
-        genero: "Comédia",
-        ano: 2025,
-        duracao: "1h 39min",
-        descricao: "Um anjo bem-intencionado, mas inepto, chamado Gabriel interfere nas vidas de um trabalhador em dificuldades e de um rico capitalista de risco.",
-        poster: "https://media.fstatic.com/JvShHZ00oRZM-G_hP7IEmqs3qWM=/322x478/smart/filters:format(webp)/media/movies/covers/2025/09/cats_FnV8IwR.png",
-        linkPlayer1: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1114967.mp4",
-        linkPlayer2: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1114967.mp4",
-        linkGA: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1114967.mp4",
-        linkADM: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1114967.mp4"
-      },
-      "sr-002": {
-        type: "series",
-        titulo: "Dia do Chacal",
-        genero: "Ação/Crime ~ 1° Temporada",
-        ano: 2024,
-        duracao: "55 Min por ep",
-        descricao: "Para assassinar Charles de Gaulle, então presidente da França, a OAS, um grupo dissidente francês, recrutou Jackal.",
-        poster: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_2DMKSaCifRTxIFQ36nwrI0Kl3PMfsFVT-bKMdYgxEw&s=10",
-        episodios: [
-          {
-            numero: "1x01",
-            titulo: "DUB",
-            duracao: "45min",
-            linkPlayer1: "https://cdn-zenitsu-2-gamabunta.b-cdn.net/cf/hls/animes/sawaranaide-kotesashi-kun/007.mp4/media-1/stream.m3u8",
-            linkPlayer2: "https://cdn-zenitsu-2-gamabunta.b-cdn.net/cf/hls/animes/sawaranaide-kotesashi-kun/007.mp4/media-1/stream.m3u8",
-            linkGA: "https://cdn-zenitsu-2-gamabunta.b-cdn.net/cf/hls/animes/sawaranaide-kotesashi-kun/007.mp4/media-1/stream.m3u8",
-            linkADM: "https://cdn-zenitsu-2-gamabunta.b-cdn.net/cf/hls/animes/sawaranaide-kotesashi-kun/007.mp4/media-1/stream.m3u8"
-          }
-        ]
-      },
-      "sr-003": {
-        type: "series",
+      "an-001": {
+        type: "anime",
         titulo: "O Poderoso Nein",
-        genero: "Fantasia ~ Anime ~ 1 Temporada",
+        genero: "Fantasia",
         ano: 2025,
         duracao: "50min",
         descricao: "Acompanha um grupo de criminosos e desajustados que são os únicos que podem impedir que o reino mergulhe no caos quando um artefato arcano capaz de remodelar a realidade cai nas mãos erradas...",
@@ -1337,6 +1472,32 @@
             linkADM: "https://f005.backblazeb2.com/file/germai/a1b961/-S-M-a-i-s-V-i-s-t-a-s/222766/1/dub/1.mp4"
           }
         ]
+      },
+      "mv-002": {
+        type: "movie",
+        titulo: "Quando o Céu se Engana",
+        genero: "Comédia",
+        ano: 2025,
+        duracao: "1h 39min",
+        descricao: "Um anjo bem-intencionado, mas inepto, chamado Gabriel interfere nas vidas de um trabalhador em dificuldades e de um rico capitalista de risco.",
+        poster: "https://media.fstatic.com/JvShHZ00oRZM-G_hP7IEmqs3qWM=/322x478/smart/filters:format(webp)/media/movies/covers/2025/09/cats_FnV8IwR.png",
+        linkPlayer1: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1114967.mp4",
+        linkPlayer2: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1114967.mp4",
+        linkGA: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1114967.mp4",
+        linkADM: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1114967.mp4"
+      },
+      "at-001": {
+        type: "animation",
+        titulo: "Moana 2",
+        genero: "Aventura/Animação",
+        ano: 2024,
+        duracao: "1h 40min",
+        descricao: "Após receber um chamado inesperado de seus ancestrais navegadores, Moana embarca em uma jornada pelos mares distantes da Oceania e em águas perigosas e perdidas para uma aventura diferente de tudo que já enfrentou.",
+        poster: "https://image.tmdb.org/t/p/w185/yh64qw9mgXBvlaWDi7Q9tpUBAvH.jpg",
+        linkPlayer1: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1114967.mp4",
+        linkPlayer2: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1114967.mp4",
+        linkGA: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1114967.mp4",
+        linkADM: "https://f005.backblazeb2.com/file/ellenr/a1b961/-f-i-l-m-e-s-/1114967.mp4"
       }
     };
 
@@ -1345,6 +1506,7 @@
     let currentPlayerLinks = { link1: '', link2: '' };
     let currentLinkIndex = 1;
     let currentEpisodeData = null;
+    let currentItemData = null;
 
     // Fullscreen State
     let isFullscreen = false;
@@ -1353,8 +1515,32 @@
     let currentFilter = 'all';
     let searchTerm = '';
 
-    // History Management
+    // History Management com localStorage
     let historyData = [];
+
+    // Carregar histórico do localStorage
+    function loadHistory() {
+      try {
+        // eslint-disable-next-line no-restricted-globals
+        const saved = localStorage.getItem('cinePlusHistory');
+        if (saved) {
+          historyData = JSON.parse(saved);
+        }
+      } catch (e) {
+        console.error('Erro ao carregar histórico:', e);
+        historyData = [];
+      }
+    }
+
+    // Salvar histórico no localStorage
+    function saveHistory() {
+      try {
+        // eslint-disable-next-line no-restricted-globals
+        localStorage.setItem('cinePlusHistory', JSON.stringify(historyData));
+      } catch (e) {
+        console.error('Erro ao salvar histórico:', e);
+      }
+    }
 
     function addToHistory(id) {
       const item = data[id];
@@ -1375,6 +1561,7 @@
         historyData = historyData.slice(0, 20);
       }
 
+      saveHistory();
       updateHistoryBadge();
     }
 
@@ -1390,6 +1577,7 @@
 
     function clearHistory() {
       historyData = [];
+      saveHistory();
       updateHistoryBadge();
       renderHistory();
     }
@@ -1405,6 +1593,17 @@
       if (minutes < 60) return `${minutes} min atrás`;
       if (hours < 24) return `${hours}h atrás`;
       return `${days}d atrás`;
+    }
+
+    function getTypeLabel(type) {
+      const labels = {
+        movie: 'Filme',
+        series: 'Série',
+        anime: 'Anime',
+        animation: 'Animação',
+        dorama: 'Dorama'
+      };
+      return labels[type] || type;
     }
 
     function renderHistory() {
@@ -1425,7 +1624,7 @@
           <img src="${item.poster}" alt="${item.titulo}" class="history-item-img">
           <div class="history-item-info">
             <div class="history-item-title">${item.titulo}</div>
-            <div class="history-item-meta">${item.ano} • ${item.genero} • ${item.type === 'movie' ? 'Filme' : 'Série'}</div>
+            <div class="history-item-meta">${item.ano} • ${item.genero} • ${getTypeLabel(item.type)}</div>
             <div class="history-item-time">${formatTimeAgo(item.timestamp)}</div>
           </div>
         </div>
@@ -1472,12 +1671,16 @@
         const card = document.createElement('div');
         card.className = 'card';
         card.style.animationDelay = `${index * 0.05}s`;
-        card.onclick = () => openOverlay(id);
+
+        // Use addEventListener ao invés de onclick inline
+        card.addEventListener('click', function() {
+          openOverlay(id);
+        });
 
         card.innerHTML = `
           <div class="card-img-container">
             <img src="${item.poster}" alt="${item.titulo}">
-            <div class="card-type ${item.type}">${item.type === 'movie' ? 'Filme' : 'Série'}</div>
+            <div class="card-type ${item.type}">${getTypeLabel(item.type)}</div>
           </div>
           <div class="card-info">
             <div class="card-title">${item.titulo}</div>
@@ -1514,7 +1717,6 @@
       const btn = document.getElementById("btnFullscreenToggle");
 
       if (!isFullscreen) {
-        // Ativar tela cheia
         try {
           if (typeof AppBridge !== "undefined" && AppBridge.enterFullscreen) {
             AppBridge.enterFullscreen();
@@ -1526,7 +1728,6 @@
         btn.classList.add("active");
         isFullscreen = true;
       } else {
-        // Desativar tela cheia
         try {
           if (typeof AppBridge !== "undefined" && AppBridge.exitFullscreen) {
             AppBridge.exitFullscreen();
@@ -1553,10 +1754,8 @@
     }
 
     function initializePlayer() {
-      // Destroy any existing player first
       destroyPlayer();
 
-      // Initialize Video.js
       player = videojs('videoPlayer', {
         fluid: true,
         controls: true,
@@ -1572,7 +1771,6 @@
         }
       });
 
-      // Error handling
       player.on('error', function() {
         const error = player.error();
         if (error) {
@@ -1589,7 +1787,6 @@
           showError(errorMsg);
           console.error('Player error:', error);
 
-          // Auto switch link on error
           setTimeout(() => switchLink(), 2000);
         }
       });
@@ -1605,12 +1802,10 @@
       const errorMessage = document.getElementById('errorMessage');
       errorMessage.classList.remove('show');
 
-      // Set poster if available
       if (currentEpisodeData && currentEpisodeData.poster) {
         player.poster(currentEpisodeData.poster);
       }
 
-      // Detect format and set source
       let sourceType = 'video/mp4';
 
       if (url.endsWith('.m3u8') || url.includes('.m3u8')) {
@@ -1621,7 +1816,6 @@
         sourceType = 'video/webm';
       }
 
-      // Log para debug
       console.log('Loading video:', url, 'Type:', sourceType);
 
       player.src({
@@ -1629,7 +1823,6 @@
         type: sourceType
       });
 
-      // Auto play
       player.ready(function() {
         player.play().catch(e => {
           console.warn('Auto-play prevented:', e);
@@ -1656,10 +1849,7 @@
       loadVideo(newUrl);
     }
 
-    // Switch link button listener
     document.getElementById('switchLinkBtn').addEventListener('click', switchLink);
-
-    // Fullscreen button listener
     document.getElementById('btnFullscreenToggle').addEventListener('click', toggleFullscreen);
 
     function loadEpisodePlayer(episodeLinks, poster) {
@@ -1674,12 +1864,77 @@
       loadVideo(currentPlayerLinks.link1);
     }
 
+    // Episodes Modal Functions
+    function openEpisodesModal() {
+      if (!currentItemData || !currentItemData.episodios) return;
+
+      const modalBody = document.getElementById('episodesModalBody');
+      modalBody.innerHTML = currentItemData.episodios.map((ep, idx) => {
+        const epJson = JSON.stringify(ep).replace(/"/g, '&quot;');
+        return `
+        <div class="episode-item" data-episode-index="${idx}">
+          <div class="episode-info">
+            <div class="episode-name">${ep.numero} - ${ep.titulo}</div>
+            <div class="episode-duration">${ep.duracao}</div>
+          </div>
+          <div class="episode-actions">
+            <button class="btn-episode btn-episode-watch" data-action="watch" data-episode-index="${idx}">Assistir</button>
+            <button class="btn-episode btn-episode-ga" data-action="ga" data-episode-index="${idx}">GA</button>
+            <button class="btn-episode btn-episode-adm" data-action="adm" data-episode-index="${idx}">ADM</button>
+          </div>
+        </div>
+      `}).join('');
+
+      // Adicionar event listeners após renderizar
+      modalBody.querySelectorAll('.episode-item').forEach((item, idx) => {
+        const ep = currentItemData.episodios[idx];
+
+        item.querySelector('[data-action="watch"]').addEventListener('click', function(e) {
+          e.stopPropagation();
+          selectEpisode(ep);
+        });
+
+        item.querySelector('[data-action="ga"]').addEventListener('click', function(e) {
+          e.stopPropagation();
+          openApp("GA", ep.linkGA);
+        });
+
+        item.querySelector('[data-action="adm"]').addEventListener('click', function(e) {
+          e.stopPropagation();
+          openApp("ADM", ep.linkADM);
+        });
+
+        // Click no item inteiro também seleciona o episódio
+        item.addEventListener('click', function() {
+          selectEpisode(ep);
+        });
+      });
+
+      document.getElementById('episodesModalOverlay').classList.add('active');
+    }
+
+    function closeEpisodesModal() {
+      document.getElementById('episodesModalOverlay').classList.remove('active');
+    }
+
+    function selectEpisode(episode) {
+      closeEpisodesModal();
+      loadEpisodePlayer(episode, currentItemData.poster);
+
+      // Scroll to top to show the player
+      document.getElementById('overlay').scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+
     // Open modal
     function openOverlay(id) {
       const item = data[id];
       if (!item) return;
 
       addToHistory(id);
+      currentItemData = item;
 
       document.getElementById('modalTitle').textContent = item.titulo;
       document.getElementById('modalMeta').innerHTML = `
@@ -1693,7 +1948,7 @@
         </div>
         <div class="modal-meta-item">
           <span class="modal-meta-label">Tipo:</span>
-          <span>${item.type === 'movie' ? 'Filme' : 'Série'}</span>
+          <span>${getTypeLabel(item.type)}</span>
         </div>
       `;
 
@@ -1703,31 +1958,11 @@
 
       document.getElementById('modalDescription').textContent = item.descricao;
 
-      const episodesSection = document.getElementById('episodesSection');
+      const episodesButtonContainer = document.getElementById('episodesButtonContainer');
       const mainActions = document.getElementById('mainActions');
 
-      if (item.type === 'series' && item.episodios) {
-        let episodesHTML = '<div class="episodes-section"><h3 class="episodes-title">Episódios</h3>';
-
-        item.episodios.forEach(ep => {
-          episodesHTML += `
-            <div class="episode-item">
-              <div class="episode-info">
-                <div class="episode-name">${ep.numero} - ${ep.titulo}</div>
-                <div class="episode-duration">${ep.duracao}</div>
-              </div>
-              <div class="episode-actions">
-                <button class="btn-episode btn-episode-watch" onclick='loadEpisodePlayer(${JSON.stringify(ep)}, "${item.poster}")'>Assistir</button>
-                <button class="btn-episode btn-episode-ga" onclick="openApp('GA', '${ep.linkGA}')">GA</button>
-                <button class="btn-episode btn-episode-adm" onclick="openApp('ADM', '${ep.linkADM}')">ADM</button>
-              </div>
-            </div>
-          `;
-        });
-
-        episodesHTML += '</div>';
-        episodesSection.innerHTML = episodesHTML;
-        episodesSection.style.display = 'block';
+      if ((item.type === 'series' || item.type === 'anime' || item.type === 'dorama') && item.episodios) {
+        episodesButtonContainer.style.display = 'block';
         mainActions.style.display = 'none';
 
         // Load first episode
@@ -1735,15 +1970,26 @@
           loadEpisodePlayer(item.episodios[0], item.poster);
         }
       } else {
-        episodesSection.style.display = 'none';
+        episodesButtonContainer.style.display = 'none';
         mainActions.style.display = 'flex';
 
         // Load movie
         loadEpisodePlayer(item, item.poster);
       }
 
-      document.getElementById('btnGA').onclick = () => openApp('GA', item.linkGA);
-      document.getElementById('btnADM').onclick = () => openApp('ADM', item.linkADM);
+      // Remover listeners antigos e adicionar novos
+      const btnGA = document.getElementById('btnGA');
+      const btnADM = document.getElementById('btnADM');
+
+      // Clonar os botões para remover todos os event listeners
+      const newBtnGA = btnGA.cloneNode(true);
+      const newBtnADM = btnADM.cloneNode(true);
+      btnGA.parentNode.replaceChild(newBtnGA, btnGA);
+      btnADM.parentNode.replaceChild(newBtnADM, btnADM);
+
+      // Adicionar novos listeners
+      newBtnGA.addEventListener('click', () => openApp('GA', item.linkGA));
+      newBtnADM.addEventListener('click', () => openApp('ADM', item.linkADM));
 
       location.hash = id;
       document.getElementById('overlay').classList.add('active');
@@ -1753,15 +1999,14 @@
     function closeOverlay() {
       document.getElementById('overlay').classList.remove('active');
 
-      // Properly destroy the player
       destroyPlayer();
 
-      // Reset fullscreen state
       isFullscreen = false;
       const btn = document.getElementById("btnFullscreenToggle");
       btn.classList.remove("active");
       btn.classList.add("inactive");
 
+      currentItemData = null;
       location.hash = '';
     }
 
@@ -1774,7 +2019,7 @@
       }, 200);
     }
 
-    // Close modal when clicking outside
+    // Close modals when clicking outside
     document.getElementById('overlay').addEventListener('click', (e) => {
       if (e.target.id === 'overlay') {
         closeOverlay();
@@ -1787,10 +2032,18 @@
       }
     });
 
+    document.getElementById('episodesModalOverlay').addEventListener('click', (e) => {
+      if (e.target.id === 'episodesModalOverlay') {
+        closeEpisodesModal();
+      }
+    });
+
     // Handle hash on load
     window.addEventListener('DOMContentLoaded', () => {
+      loadHistory(); // Carregar histórico do localStorage
       renderGrid();
       updateHistoryBadge();
+
       const hash = location.hash.replace('#', '');
       if (hash && data[hash]) {
         openOverlay(hash);
@@ -1802,7 +2055,7 @@
       const hash = location.hash.replace('#', '');
       if (hash && data[hash]) {
         openOverlay(hash);
-      } else {
+      } else if (!hash) {
         closeOverlay();
       }
     });
@@ -1869,6 +2122,7 @@
       }
     };
   </script>
+
 </body>
 </html>
 
