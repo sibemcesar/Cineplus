@@ -2898,7 +2898,7 @@
   let startY = 0;
   let isPulling = false;
   let triggered = false;
-  const THRESHOLD = 80; // px de arrasto para acionar
+  const THRESHOLD = 50; // px de arrasto para acionar
 
   function showToast(msg) {
     const toast = document.getElementById('toast');
@@ -2942,6 +2942,13 @@
     isPulling = false;
   }, { passive: true });
 </script>
+  <script>
+    // chama automaticamente ao carregar a página
+    window.onload = function() {
+      // passa a versão que você quer comparar
+      Atualizar1.verificarVersao("1.0.0");
+    };
+  </script>
 </body>
 </html>
 
