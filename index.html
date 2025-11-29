@@ -1447,7 +1447,7 @@
 
     <button class="btn" onclick="openSettings()">
       <svg viewBox="0 0 24 24"><path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7zm7.94-2.5c.04-.33.06-.66.06-1s-.02-.67-.06-1l2.03-1.58a.5.5 0 0 0 .12-.65l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7.07 7.07 0 0 0-1.73-1l-.36-2.54A.5.5 0 0 0 14.5 2h-5a.5.5 0 0 0-.5.42l-.36 2.54c-.63.25-1.21.58-1.73 1l-2.39-.96a.5.5 0 0 0-.61.22L2.5 8.42a.5.5 0 0 0 .12.65l2.03 1.58c-.04.33-.06.66-.06 1s.02.67.06 1l-2.03 1.58a.5.5 0 0 0-.12.65l1.92 3.32c.14.24.42.34.68.22l2.39-.96c.52.42 1.10.75 1.73 1l.36 2.54c.04.27.26.46.5.46h5c.24 0 .46-.19.5-.46l.36-2.54c.63-.25 1.21-.58 1.73-1l2.39.96c.26.12.54.02.68-.22l1.92-3.32a.5.5 0 0 0-.12-.65l-2.03-1.58z"/></svg>
-      Definições do GA Navegador
+      Definições do GA
     </button>
     <button class="btn" onclick="openOverlay2()">
       <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -1648,7 +1648,7 @@
           <button id="btnADM" class="btn-main btn-adm">Baixar ADM</button>
         </div>
 
-        <button class="btn-close" onclick="closeOverlay()">Voltar</button>
+        <button class="btn-close" onclick="window.location.href='index.html'">Voltar</button>
       </div>
     </div>
   </div>
@@ -1824,6 +1824,23 @@
       </div>
     </div>
   </div>
+
+<div id="toast" style="
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  background: #222;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease, transform .2s ease;
+  z-index: 999999;
+">Atualizando...</div>
 
   <script>
     // Dark mode detection
@@ -2877,6 +2894,54 @@
       }
     };
   </script>
+<script>
+  let startY = 0;
+  let isPulling = false;
+  let triggered = false;
+  const THRESHOLD = 80; // px de arrasto para acionar
+
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+    // Oculta automaticamente após 1.2s (caso navegação não ocorra)
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(-50%) translateY(-8px)';
+    }, 1200);
+  }
+
+  document.addEventListener('touchstart', (e) => {
+    // Só inicia se estiver no topo da página
+    if (window.scrollY === 0) {
+      startY = e.touches[0].clientY;
+      isPulling = true;
+      triggered = false;
+    } else {
+      isPulling = false;
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchmove', (e) => {
+    if (!isPulling || triggered) return;
+    const currentY = e.touches[0].clientY;
+    const distance = currentY - startY;
+
+    if (distance > THRESHOLD) {
+      triggered = true;
+      showToast('Atualizando...');
+      // Pequeno atraso para o usuário ver o toast
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 300);
+    }
+  }, { passive: true });
+
+  document.addEventListener('touchend', () => {
+    isPulling = false;
+  }, { passive: true });
+</script>
 </body>
 </html>
 
