@@ -2011,8 +2011,7 @@
           </div>
         </div>
 
-        <button class="btn-close" onclick="closeOverlay()">Voltar</button>
-      </div>
+<button class="btn-close" onclick="window.location.href='index.html'">Voltar</button>    </div>
     </div>
   </div>
 
@@ -3493,7 +3492,7 @@
              fill="currentColor" viewBox="0 0 24 24" style="margin-right:8px;">
           <path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h12v2H3z"/>
         </svg>
-        Voltar
+        Sinopse    
       `;
       showingComments = true;
     } else {
@@ -3507,10 +3506,9 @@
 
       // Trocar ícone/texto do botão
       toggleBtn.innerHTML = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-             fill="currentColor" viewBox="0 0 24 24" style="margin-right:8px;">
-          <path d="M21 6h-18c-1.1 0-2 .9-2 2v12l4-4h16c1.1 0 2-.9 2-2v-8c0-1.1-.9-2-2-2z"/>
-        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+  <path d="M21 14a4 4 0 0 1-4 4H8l-5 4V6a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8Z"/>
+</svg>
         Comentários
       `;
       showingComments = false;
