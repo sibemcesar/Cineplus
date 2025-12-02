@@ -18,7 +18,7 @@
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
     import { getAuth, signInAnonymously, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-    import { getDatabase, ref, set, get, update, remove, onValue, push } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+    import { getDatabase, ref, set, get, update, remove, onValue, push, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
     const firebaseConfig = {
       apiKey: "AIzaSyCUh73zCleTz-_CqFiS2FkO3JWAG1pnoPw",
@@ -50,7 +50,8 @@
       update,
       remove,
       onValue,
-      push
+      push,
+      serverTimestamp
     };
   </script>
 
@@ -1342,8 +1343,179 @@
   .overlay.history-overlay.active {
     display: flex;
   }
+
+  /* Comments Section */
+  .comments-section {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .comments-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .comments-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent-primary);
+    margin: 0;
+  }
+
+  .comments-count {
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .comment-form {
+    background: var(--bg-card);
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border: 1px solid var(--border-color);
+  }
+
+  .comment-input {
+    width: 100%;
+    min-height: 80px;
+    padding: 12px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    resize: vertical;
+    margin-bottom: 12px;
+  }
+
+  .comment-input:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+  }
+
+  .comment-submit-btn {
+    padding: 10px 20px;
+    background: var(--accent-green);
+    border: none;
+    border-radius: 6px;
+    color: var(--bg-primary);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .comment-submit-btn:hover {
+    background: #6a8574;
+    transform: translateY(-1px);
+  }
+
+  .comment-submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .comment-item {
+    background: var(--bg-card);
+    padding: 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    animation: fadeIn 0.3s ease;
+  }
+
+  .comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+  }
+
+  .comment-author {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--accent-primary);
+  }
+
+  .comment-time {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .comment-text {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    word-wrap: break-word;
+  }
+
+  .comment-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .comment-delete-btn {
+    padding: 4px 12px;
+    background: transparent;
+    border: 1px solid #ff6b6b;
+    border-radius: 4px;
+    color: #ff6b6b;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .comment-delete-btn:hover {
+    background: rgba(255, 107, 107, 0.1);
+  }
+
+  .no-comments {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  .login-to-comment {
+    text-align: center;
+    padding: 20px;
+    background: var(--bg-card);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+  }
+
+  .login-to-comment button {
+    margin-top: 12px;
+    padding: 10px 20px;
+    background: var(--accent-green);
+    border: none;
+    border-radius: 6px;
+    color: var(--bg-primary);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .login-to-comment button:hover {
+    background: #6a8574;
+  }
+    .hidden { display: none !important; }
   
-  #overlay4 {
+    #overlay4 {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
@@ -1538,7 +1710,7 @@
 
     <button class="btn" onclick="openSettings()">
       <svg viewBox="0 0 24 24"><path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7zm7.94-2.5c.04-.33.06-.66.06-1s-.02-.67-.06-1l2.03-1.58a.5.5 0 0 0 .12-.65l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7.07 7.07 0 0 0-1.73-1l-.36-2.54A.5.5 0 0 0 14.5 2h-5a.5.5 0 0 0-.5.42l-.36 2.54c-.63.25-1.21.58-1.73 1l-2.39-.96a.5.5 0 0 0-.61.22L2.5 8.42a.5.5 0 0 0 .12.65l2.03 1.58c-.04.33-.06.66-.06 1s.02.67.06 1l-2.03 1.58a.5.5 0 0 0-.12.65l1.92 3.32c.14.24.42.34.68.22l2.39-.96c.52.42 1.10.75 1.73 1l.36 2.54c.04.27.26.46.5.46h5c.24 0 .46-.19.5-.46l.36-2.54c.63-.25 1.21-.58 1.73-1l2.39.96c.26.12.54.02.68-.22l1.92-3.32a.5.5 0 0 0-.12-.65l-2.03-1.58z"/></svg>
-      Definições do GA
+      Definições do G.A
     </button>
     <button class="btn" onclick="openOverlay2()">
       <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -1553,10 +1725,10 @@
         <h2>Baixar Navegadores</h2>
         <p>Escolha um dos navegadores abaixo para instalar e abrir os conteúdos do Cine Plus AO:</p>
         <div class="links">
-          <button class="link-btn" onclick="Apps.openADM()">
+          <button class="link-btn" onclick="App.openADM()">
             Abrir ADM Downloader
           </button>
-          <button class="link-btn" onclick="Apps.openGA()">
+          <button class="link-btn" onclick="App.openGA()">
             Abrir GA Navegador
           </button>
         </div>
@@ -1564,7 +1736,7 @@
       </div>
     </div>
 
-     <button class="btn"  onclick="Apps.openCM()">
+     <button class="btn"  onclick="App.openCM()">
       <svg
   width="24" height="24" viewBox="0 0 24 24"
   xmlns="http://www.w3.org/2000/svg"
@@ -1653,7 +1825,7 @@
   </svg>
       Quero ver Novidades
     </button>
-     
+
          <button class="btn" onclick="openOverlay3()">
       <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10
@@ -1691,8 +1863,8 @@
           Desenvolvido por <strong>SIBEM</strong>
         </p>
         <p>
-          Versão: <strong>2.0.0</strong><br>
-          Última atualização: Novembro 2025
+          Versão: <strong>2.1.0</strong><br>
+          Última atualização: Dezembro 2025
         </p>
         <button class="close3" onclick="closeOverlay3()">Voltar</button>
       </div>
@@ -1770,6 +1942,20 @@
               </svg>
               <span id="linkIndicator">Link 1</span>
             </div>
+<button id="toggleCommentsBtn" style="
+  background:#222;
+  color:#00aaff;
+  border:none; 
+  border-radius:4px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+">
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+  <path d="M21 14a4 4 0 0 1-4 4H8l-5 4V6a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8Z"/>
+</svg>
+  Comentários
+</button>
 <button id="switchLinkBtn"
   style="background-color:#222;color:#00aaff;border:none;padding:10px 18px;
          font-size:16px;border-radius:6px;cursor:pointer;display:flex;
@@ -1780,6 +1966,8 @@
   </svg>
   Trocar
 </button>
+            
+
           </div>
         </div>
       </div>
@@ -1809,7 +1997,21 @@
           <button id="btnADM" class="btn-main btn-adm">Baixar ADM</button>
         </div>
 
-        <button class="btn-close" onclick="window.location.href='index.html'">Voltar</button>
+        <!-- Comments Section -->
+        <div class="comments-section" id="commentsSection">
+          <div class="comments-header">
+            <h3>Comentários</h3>
+            <span class="comments-count" id="commentsCount">0 comentários</span>
+          </div>
+
+          <div id="commentFormContainer"></div>
+
+          <div class="comments-list" id="commentsList">
+            <div class="no-comments">Nenhum comentário ainda. Seja o primeiro!</div>
+          </div>
+        </div>
+
+        <button class="btn-close" onclick="closeOverlay()">Voltar</button>
       </div>
     </div>
   </div>
@@ -1985,7 +2187,6 @@
       </div>
     </div>
   </div>
-
 <div id="toast" style="
   position: fixed;
   top: 14px;
@@ -2038,6 +2239,10 @@
 
     // Episode counter for form
     let episodeCounter = 0;
+
+    // Comments state
+    let currentContentId = null;
+    let commentsData = {};
 
     // ===== FIREBASE INITIALIZATION =====
     window.addEventListener('load', () => {
@@ -2108,20 +2313,50 @@
 
     // ===== HISTORY MANAGEMENT =====
     function loadHistory() {
-      try {
-        const saved = localStorage.getItem('cinePlusHistory');
-        if (saved) {
-          historyData = JSON.parse(saved);
+      if (!currentUser) return;
+
+      const { ref, onValue } = window.firebaseModules;
+      const database = window.firebaseDatabase;
+
+      const historyRef = ref(database, `users/${currentUser.uid}/history`);
+      onValue(historyRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          historyData = Object.entries(data)
+            .map(([key, value]) => ({ ...value, firebaseKey: key }))
+            .sort((a, b) => b.timestamp - a.timestamp)
+            .slice(0, 20);
+        } else {
+          historyData = [];
         }
-      } catch (e) {
-        console.error('Erro ao carregar histórico:', e);
-        historyData = [];
-      }
+        updateHistoryBadge();
+      });
     }
 
-    function saveHistory() {
+    async function saveHistory() {
+      if (!currentUser) return;
+
       try {
-        localStorage.setItem('cinePlusHistory', JSON.stringify(historyData));
+        const { ref, set } = window.firebaseModules;
+        const database = window.firebaseDatabase;
+
+        const historyRef = ref(database, `users/${currentUser.uid}/history`);
+        const historyObj = {};
+
+        historyData.forEach((item, index) => {
+          const key = item.firebaseKey || `item_${item.id}_${item.timestamp}`;
+          historyObj[key] = {
+            id: item.id,
+            titulo: item.titulo,
+            type: item.type,
+            genero: item.genero,
+            ano: item.ano,
+            poster: item.poster,
+            timestamp: item.timestamp
+          };
+        });
+
+        await set(historyRef, historyObj);
       } catch (e) {
         console.error('Erro ao salvar histórico:', e);
       }
@@ -2510,6 +2745,167 @@
       });
     }
 
+    // ===== COMMENTS MANAGEMENT =====
+    function loadComments(contentId) {
+      if (!contentId) return;
+
+      const { ref, onValue } = window.firebaseModules;
+      const database = window.firebaseDatabase;
+
+      const commentsRef = ref(database, `comments/${contentId}`);
+      onValue(commentsRef, (snapshot) => {
+        const data = snapshot.val();
+        commentsData = data || {};
+        renderComments();
+      });
+    }
+
+    function renderComments() {
+      const commentsList = document.getElementById('commentsList');
+      const commentsCount = document.getElementById('commentsCount');
+      const commentFormContainer = document.getElementById('commentFormContainer');
+
+      const comments = Object.entries(commentsData).map(([key, value]) => ({
+        ...value,
+        commentId: key
+      })).sort((a, b) => b.timestamp - a.timestamp);
+
+      commentsCount.textContent = `${comments.length} comentário${comments.length !== 1 ? 's' : ''}`;
+
+      // Render comment form
+      if (currentUser) {
+        const userEmail = currentUser.email || 'Usuário Anônimo';
+        const canComment = !isAnonymous; // Somente usuários com conta podem comentar
+
+        if (canComment) {
+          commentFormContainer.innerHTML = `
+            <div class="comment-form">
+              <textarea
+                id="commentInput"
+                class="comment-input"
+                placeholder="Escreva seu comentário..."
+                maxlength="500"
+              ></textarea>
+              <button class="comment-submit-btn" onclick="submitComment()">Enviar Comentário</button>
+            </div>
+          `;
+        } else {
+          commentFormContainer.innerHTML = `
+            <div class="login-to-comment">
+              <p>Crie uma conta para comentar</p>
+              <button onclick="closeOverlay(); openRegisterModal();">Criar Conta</button>
+            </div>
+          `;
+        }
+      } else {
+        commentFormContainer.innerHTML = `
+          <div class="login-to-comment">
+            <p>Crie uma conta para comentar</p>
+            <button onclick="closeOverlay(); openRegisterModal();">Criar Conta</button>
+          </div>
+        `;
+      }
+
+      // Render comments list
+      if (comments.length === 0) {
+        commentsList.innerHTML = '<div class="no-comments">Nenhum comentário ainda. Seja o primeiro!</div>';
+        return;
+      }
+
+      commentsList.innerHTML = comments.map(comment => {
+        const isOwner = currentUser && comment.userId === currentUser.uid;
+        const timeAgo = formatTimeAgo(comment.timestamp);
+
+        return `
+          <div class="comment-item">
+            <div class="comment-header">
+              <span class="comment-author">${comment.authorName}</span>
+              <span class="comment-time">${timeAgo}</span>
+            </div>
+            <div class="comment-text">${escapeHtml(comment.text)}</div>
+            ${isOwner ? `
+              <div class="comment-actions">
+                <button class="comment-delete-btn" onclick="deleteComment('${comment.commentId}')">Apagar</button>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function submitComment() {
+      if (!currentUser || isAnonymous) {
+        showCustomAlert('Você precisa criar uma conta para comentar.');
+        return;
+      }
+
+      const input = document.getElementById('commentInput');
+      const text = input.value.trim();
+
+      if (!text) {
+        showCustomAlert('Digite um comentário antes de enviar.');
+        return;
+      }
+
+      if (text.length > 500) {
+        showCustomAlert('O comentário deve ter no máximo 500 caracteres.');
+        return;
+      }
+
+      try {
+        const { ref, push, set } = window.firebaseModules;
+        const database = window.firebaseDatabase;
+
+        const commentData = {
+          text: text,
+          authorName: currentUser.email,
+          userId: currentUser.uid,
+          timestamp: Date.now()
+        };
+
+        const commentsRef = ref(database, `comments/${currentContentId}`);
+        const newCommentRef = push(commentsRef);
+        await set(newCommentRef, commentData);
+
+        input.value = '';
+        showCustomAlert('Comentário enviado com sucesso!');
+      } catch (error) {
+        console.error('Erro ao enviar comentário:', error);
+        showCustomAlert('Erro ao enviar comentário: ' + error.message);
+      }
+    }
+
+    async function deleteComment(commentId) {
+      if (!currentUser) return;
+
+      const comment = commentsData[commentId];
+      if (!comment || comment.userId !== currentUser.uid) {
+        showCustomAlert('Você só pode apagar seus próprios comentários.');
+        return;
+      }
+
+      showCustomConfirm('Deseja realmente apagar este comentário?', async () => {
+        try {
+          const { ref, remove } = window.firebaseModules;
+          const database = window.firebaseDatabase;
+
+          const commentRef = ref(database, `comments/${currentContentId}/${commentId}`);
+          await remove(commentRef);
+
+          showCustomAlert('Comentário apagado com sucesso!');
+        } catch (error) {
+          console.error('Erro ao apagar comentário:', error);
+          showCustomAlert('Erro ao apagar comentário: ' + error.message);
+        }
+      });
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
     // ===== CONTENT MODAL =====
     function openOverlay(id) {
       const item = allContent[id];
@@ -2517,6 +2913,10 @@
 
       addToHistory(id);
       currentItemData = item;
+      currentContentId = id;
+
+      // Load comments for this content
+      loadComments(id);
 
       document.getElementById('modalTitle').textContent = item.titulo;
       document.getElementById('modalMeta').innerHTML = `
@@ -2583,6 +2983,8 @@
       btn.classList.add("inactive");
 
       currentItemData = null;
+      currentContentId = null;
+      commentsData = {};
       location.hash = '';
     }
 
@@ -3055,6 +3457,66 @@
       }
     };
   </script>
+  <script>
+  const toggleBtn = document.getElementById('toggleCommentsBtn');
+  const genreContainer = document.getElementById('genreContainer');
+  const modalDescription = document.getElementById('modalDescription');
+  const episodesButtonContainer = document.getElementById('episodesButtonContainer');
+  const mainActions = document.getElementById('mainActions');
+  const commentsSection = document.getElementById('commentsSection');
+
+  // Segurança: evita erros se algum bloco não existir
+  function safe(el) { return !!el && el instanceof HTMLElement; }
+
+  // Estado inicial: conteúdo principal visível, comentários ocultos
+  if (safe(commentsSection)) commentsSection.classList.add('hidden');
+  if (safe(genreContainer)) genreContainer.classList.remove('hidden');
+  if (safe(modalDescription)) modalDescription.classList.remove('hidden');
+  if (safe(episodesButtonContainer)) episodesButtonContainer.classList.remove('hidden');
+  if (safe(mainActions)) mainActions.classList.remove('hidden');
+
+  let showingComments = false;
+
+  toggleBtn.addEventListener('click', () => {
+    if (!showingComments) {
+      // Mostrar comentários, ocultar blocos principais
+      if (safe(commentsSection)) commentsSection.classList.remove('hidden');
+
+      if (safe(genreContainer)) genreContainer.classList.add('hidden');
+      if (safe(modalDescription)) modalDescription.classList.add('hidden');
+      if (safe(episodesButtonContainer)) episodesButtonContainer.classList.add('hidden');
+      if (safe(mainActions)) mainActions.classList.add('hidden');
+
+      // Trocar ícone/texto do botão
+      toggleBtn.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+             fill="currentColor" viewBox="0 0 24 24" style="margin-right:8px;">
+          <path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h12v2H3z"/>
+        </svg>
+        Voltar
+      `;
+      showingComments = true;
+    } else {
+      // Mostrar blocos principais, ocultar comentários
+      if (safe(commentsSection)) commentsSection.classList.add('hidden');
+
+      if (safe(genreContainer)) genreContainer.classList.remove('hidden');
+      if (safe(modalDescription)) modalDescription.classList.remove('hidden');
+      if (safe(episodesButtonContainer)) episodesButtonContainer.classList.remove('hidden');
+      if (safe(mainActions)) mainActions.classList.remove('hidden');
+
+      // Trocar ícone/texto do botão
+      toggleBtn.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+             fill="currentColor" viewBox="0 0 24 24" style="margin-right:8px;">
+          <path d="M21 6h-18c-1.1 0-2 .9-2 2v12l4-4h16c1.1 0 2-.9 2-2v-8c0-1.1-.9-2-2-2z"/>
+        </svg>
+        Comentários
+      `;
+      showingComments = false;
+    }
+  });
+</script>
 <script>
     // chama automaticamente ao carregar a página
     window.onload = function() {
@@ -3066,7 +3528,7 @@
   let startY = 0;
   let isPulling = false;
   let triggered = false;
-  const THRESHOLD = 100; // aumentei o limite para reduzir sensibilidade
+  const THRESHOLD = 200; // aumentei o limite para reduzir sensibilidade
 
   function showToast(msg) {
     const toast = document.getElementById('toast');
