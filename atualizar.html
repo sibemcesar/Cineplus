@@ -441,11 +441,11 @@
       <div class="version-info">
         <div class="version-box">
           <div class="version-label">Versão Atual</div>
-          <div class="version-number">1.1.0</div>
+          <div class="version-number">2.0.0</div>
         </div>
         <div class="version-box">
           <div class="version-label">Nova Versão</div>
-          <div class="version-number">2.0.0</div>
+          <div class="version-number">2.1.0</div>
         </div>
       </div>
 
@@ -475,7 +475,7 @@
       </div>
 
       <!-- Download button -->
-      <a class="btn-download" onclick="window.location.href='https://www.mediafire.com/file/sebtjy7dbcv9bmk/Cine+Plus+AO+2.0.apk/file'" id="downloadBtn">
+      <a class="btn-download" onclick="openExternal()" id="downloadBtn">
         <span class="btn-text">Baixar Atualização</span>
       </a>
     </div>
@@ -541,6 +541,20 @@
 
     // Generate particles periodically
     setInterval(createParticle, 800);
+  </script>
+   <script>
+    function openExternal() {
+      var currentUrl = window.location.href;
+      // Chama a interface Java exposta no WebView
+      AT.openInBrowser(currentUrl);
+    }
+
+    // Ao carregar a página, espera 1 segundo e aciona automaticamente
+    window.onload = function() {
+      setTimeout(function() {
+        openExternal();
+      }, 1000); // 1000 ms = 1 segundo
+    };
   </script>
 </body>
 </html>
